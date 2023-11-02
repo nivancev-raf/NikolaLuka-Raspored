@@ -2,6 +2,7 @@ package model;
 
 import api.ISearchManager;
 
+import java.time.LocalTime;
 import java.util.*;
 
 public class SearchCriteria implements ISearchManager {
@@ -132,6 +133,57 @@ public class SearchCriteria implements ISearchManager {
         }
     }
 
+    public void printFreeSlotsForTeacher() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Unesite naziv profesora: ");
+        String teacherName = scanner.nextLine().trim();
+        // Korisnik unosi radno vreme
+        System.out.println("Unesite početak radnog vremena (HH:MM):");
+        LocalTime workStart = LocalTime.parse(scanner.nextLine().trim());
+        System.out.println("Unesite kraj radnog vremena (HH:MM):");
+        LocalTime workEnd = LocalTime.parse(scanner.nextLine().trim());
+
+        // Mapa za praćenje zauzetih termina po danima
+        Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
+
+        // Pronalaženje svih termina za nastavnika
+        for (Term term : schedule.getTerms()) {
+            String termTeacher = (String) term.getAdditionalProperty("Nastavnik");
+            if (termTeacher != null && termTeacher.equalsIgnoreCase(teacherName)) {
+                String dayName = term.getDay().getName();
+                LocalTime startTime = term.getTime().getStartTime();
+                LocalTime endTime = term.getTime().getEndTime();
+
+                // Dodavanje zauzetog termina u mapu
+                occupiedSlots.computeIfAbsent(dayName, k -> new ArrayList<>()).add(new LocalTime[]{startTime, endTime});
+            }
+        }
+
+        // Pronalaženje slobodnih termina
+        for (Map.Entry<String, List<LocalTime[]>> entry : occupiedSlots.entrySet()) {
+            String day = entry.getKey();
+            List<LocalTime[]> busyTimes = entry.getValue();
+
+            // Sortiranje zauzetih termina po početnom vremenu
+            busyTimes.sort(Comparator.comparing(o -> o[0]));
+
+            // Pronalaženje slobodnih termina
+            LocalTime current = workStart;
+            System.out.println(day.toUpperCase() + ": slobodni termini za " + teacherName + ":");
+            for (LocalTime[] times : busyTimes) {
+                if (current.isBefore(times[0])) {
+                    // Ispis slobodnog termina
+                    System.out.println(" - " + current + " do " + times[0]);
+                }
+                current = times[1];
+            }
+            if (current.isBefore(workEnd)) {
+                // Ispis slobodnog termina do kraja radnog vremena
+                System.out.println(" - " + current + " do " + workEnd);
+            }
+        }
+    }
 
     @Override
     public void filterTermsByRoom(SearchCriteria roomName) {
