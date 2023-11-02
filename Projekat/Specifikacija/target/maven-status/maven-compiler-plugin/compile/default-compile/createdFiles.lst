@@ -1,0 +1,13 @@
+model\SearchCriteria.class
+model\Day.class
+model\Schedule.class
+api\ISearchManager.class
+util\ValidationUtil.class
+model\Room.class
+api\ITermManager.class
+Main.class
+model\Time.class
+model\Term.class
+api\IRoomManager.class
+util\PrintUtil.class
+util\FileUtil.class
