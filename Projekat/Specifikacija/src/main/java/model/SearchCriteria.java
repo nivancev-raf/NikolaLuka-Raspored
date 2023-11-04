@@ -60,43 +60,44 @@ public class SearchCriteria implements ISearchManager {
                 '}';
     }
 
-    @Override
-    public void searchTermsByCriteria() {
-        Scanner scanner = new Scanner(System.in);
-        Map<String, String> criteria = new HashMap<>();
 
-        while (true) {
-            System.out.println("Dostupni headeri za pretragu: " + String.join(", ", schedule.getHeaderIndexMap().keySet()));
-            System.out.print("Unesite header po kojem želite da vršite pretragu: ");
-            String header = scanner.nextLine().trim();
-
-            if (!schedule.getHeaderIndexMap().containsKey(header)) {
-                System.out.println("Nepostojeći header. Pokušajte ponovo.");
-                continue;
-            }
-
-            System.out.print("Unesite vrednost za pretragu: ");
-            String value = scanner.nextLine().trim();
-            criteria.put(header, value);
-
-            System.out.print("Da li želite dodati još kriterijuma? (Da/Ne): ");
-            String odgovor = scanner.nextLine().trim();
-
-            if (odgovor.equalsIgnoreCase("Ne")) {
-                break;
-            }
-        }
-
-        List<Term> rezultati = search(criteria);
-        if (rezultati.isEmpty()) {
-            System.out.println("Nema rezultata za zadate kriterijume.");
-        } else {
-            System.out.println("Rezultati pretrage:");
-            for (Term term : rezultati) {
-                System.out.println(term);
-            }
-        }
-    }
+//    @Override
+//    public void searchTermsByCriteria() {
+//        Scanner scanner = new Scanner(System.in);
+//        Map<String, String> criteria = new HashMap<>();
+//
+//        while (true) {
+//            System.out.println("Dostupni headeri za pretragu: " + String.join(", ", schedule.getHeaderIndexMap().keySet()));
+//            System.out.print("Unesite header po kojem želite da vršite pretragu: ");
+//            String header = scanner.nextLine().trim();
+//
+//            if (!schedule.getHeaderIndexMap().containsKey(header)) {
+//                System.out.println("Nepostojeći header. Pokušajte ponovo.");
+//                continue;
+//            }
+//
+//            System.out.print("Unesite vrednost za pretragu: ");
+//            String value = scanner.nextLine().trim();
+//            criteria.put(header, value);
+//
+//            System.out.print("Da li želite dodati još kriterijuma? (Da/Ne): ");
+//            String odgovor = scanner.nextLine().trim();
+//
+//            if (odgovor.equalsIgnoreCase("Ne")) {
+//                break;
+//            }
+//        }
+//
+//        List<Term> rezultati = search(criteria);
+//        if (rezultati.isEmpty()) {
+//            System.out.println("Nema rezultata za zadate kriterijume.");
+//        } else {
+//            System.out.println("Rezultati pretrage:");
+//            for (Term term : rezultati) {
+//                System.out.println(term);
+//            }
+//        }
+//    }
 
     private List<Term> search(Map<String, String> criteria) {
         List<Term> rezultati = new ArrayList<>();
@@ -183,6 +184,11 @@ public class SearchCriteria implements ISearchManager {
                 System.out.println(" - " + current + " do " + workEnd);
             }
         }
+    }
+
+    @Override
+    public List<Term> searchTermsByCriteria(Map<String, String> criteria) {
+        return search(criteria);
     }
 
     @Override

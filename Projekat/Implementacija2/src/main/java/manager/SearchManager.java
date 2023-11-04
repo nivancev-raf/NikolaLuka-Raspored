@@ -2,6 +2,10 @@ package manager;
 
 import api.ISearchManager;
 import model.SearchCriteria;
+import model.Term;
+
+import java.util.List;
+import java.util.Map;
 
 public class SearchManager implements ISearchManager {
 
@@ -12,22 +16,22 @@ public class SearchManager implements ISearchManager {
     }
 
     @Override
-    public void searchTermsByCriteria(SearchCriteria searchCriteria) {
+    public List<Term> searchTermsByCriteria(Map<String, String> criteria) {
+        return null;
+    }
+
+    @Override
+    public void filterTermsByRoom(SearchCriteria roomName) {
 
     }
 
     @Override
-    public void filterTermsByRoom(String s) {
+    public void filterTermsByDate(SearchCriteria date) {
 
     }
 
     @Override
-    public void filterTermsByDate(String s) {
-
-    }
-
-    @Override
-    public void filterTermsByTime(String s, String s1) {
+    public void filterTermsByTime(SearchCriteria startTime, SearchCriteria endTime) {
 
     }
 }

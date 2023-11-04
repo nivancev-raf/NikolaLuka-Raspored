@@ -163,6 +163,7 @@ public class Term implements ITermManager {
         }
     }
 
+    @Override
     public void addTerm() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -178,7 +179,7 @@ public class Term implements ITermManager {
             System.out.print("Da li želite dodati još jedan termin? (Da/Ne): ");
             String odgovor = scanner.nextLine().trim();
             if (odgovor.equalsIgnoreCase("Ne")) {
-                schedule.printSchedule();
+//                schedule.printSchedule(); TODO: printSchedule je sada u konzolnoj app, treba namestiti da ovo radi
                 break;
             }
         }

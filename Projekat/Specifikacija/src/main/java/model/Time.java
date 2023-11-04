@@ -1,4 +1,5 @@
 package model;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,14 +11,16 @@ public class Time {
     private LocalTime startTime;
     private LocalTime endTime;
 
+
+
+
     private Map<String, Object> additionalProperties;
-    private List<String> termList;
 
     public Time(LocalTime startTime, LocalTime endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.additionalProperties = new HashMap<>();
-        this.termList = new ArrayList<>();
+
     }
 
     public String getFullTime(String startTime, String endTime){
