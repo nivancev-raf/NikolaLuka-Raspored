@@ -5,6 +5,7 @@ import model.SearchCriteria;
 import model.Term;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,17 +15,20 @@ public class CommandLineInterface {
     private Schedule schedule;
     private ITermManager termManager;
     private SearchCriteria searchCriteria;
+    private SearchHandler searchHandler;
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
         this.termManager = new Term(schedule);
         this.searchCriteria = new SearchCriteria(schedule);
+        this.searchHandler = new SearchHandler(schedule, searchCriteria);
     }
 
     public void run() {
         CSVFileImporter csvFileImporter = new CSVFileImporter();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Unesite putanju do fajla: (/raspored.csv)");
-        String filePath = scanner.nextLine();
+//        String filePath = scanner.nextLine();
+        String filePath = "/raspored.csv"; // vratiti scanner kasnije
         try {
             csvFileImporter.importFile(filePath);
             System.out.println("Uspesno ucitan fajl: " + filePath);
@@ -34,8 +38,8 @@ public class CommandLineInterface {
             return;
         }
         System.out.println("Unesite period vazenja rasporeda u formatu: dd.MM.yyyy-dd.MM.yyyy   (primer: 01.01.2020-11.01.2020)");
-        String periodVazenja = scanner.nextLine();
-
+//        String periodVazenja = scanner.nextLine();
+        String periodVazenja = "01.01.2020-11.01.2020"; // vratiti scanner kasnije
         try {
             schedule.setPeriodVazenja(periodVazenja);
             System.out.println("Raspored vazi: ");
@@ -59,6 +63,7 @@ public class CommandLineInterface {
     }
 
     private void showMenu() {
+        System.out.println("-------------------------");
         System.out.println();
         System.out.println("MENI: ");
         System.out.println();
@@ -66,6 +71,8 @@ public class CommandLineInterface {
         System.out.println("1. Dodaj Termin");
         System.out.println("2. Obrisi Termin");
         System.out.println("3. Pretrazi Termine");
+        System.out.println("4. Pretrazi Slobone Termine za Nastavnika");
+        System.out.println("5. Izlistaj zauzete termine za Nastavnika");
 
     }
 
@@ -80,11 +87,15 @@ public class CommandLineInterface {
                 break;
             case "3":
                 // Logika za pretragu termina
-                searchAndPrintTerms();
+                searchHandler.searchAndPrintTerms();
                 break;
             case "4":
-                // Logika za pretragu termina
-                printSchedule();
+                // Logika za pretragu termina slobodnih za nastavnika
+                searchHandler.printFreeSlotsForTeacherCLI();
+                break;
+            case "5":
+                // Logika za pretragu zauzetih termina za nastavnika
+                searchHandler.printOccupiedSlotsForTeacherCLI();
                 break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
@@ -92,44 +103,6 @@ public class CommandLineInterface {
         }
     }
 
-
-    private void searchAndPrintTerms() {
-        Map<String, String> criteria = new HashMap<>();
-        Scanner scanner = new Scanner(System.in);
-        // ovde dodajete logiku za unos kriterijuma
-        // ...
-        while (true) {
-            System.out.println("Dostupni headeri za pretragu: " + String.join(", ", schedule.getHeaderIndexMap().keySet()));
-            System.out.print("Unesite header po kojem želite da vršite pretragu: ");
-            String header = scanner.nextLine().trim();
-
-            if (!schedule.getHeaderIndexMap().containsKey(header)) {
-                System.out.println("Nepostojeći header. Pokušajte ponovo.");
-                continue;
-            }
-
-            System.out.print("Unesite vrednost za pretragu: ");
-            String value = scanner.nextLine().trim();
-            criteria.put(header, value);
-
-            System.out.print("Da li želite dodati još kriterijuma? (Da/Ne): ");
-            String odgovor = scanner.nextLine().trim();
-
-            if (odgovor.equalsIgnoreCase("Ne")) {
-                break;
-            }
-        }
-
-        List<Term> results = searchCriteria.searchTermsByCriteria(criteria);
-        if (results.isEmpty()) {
-            System.out.println("Nema rezultata za zadate kriterijume.");
-        } else {
-            System.out.println("Rezultati pretrage:");
-            for (Term term : results) {
-                System.out.println(term);
-            }
-        }
-    }
 
     public void printSchedule() {
         for (Term term : Schedule.getInstance().getTerms()) {

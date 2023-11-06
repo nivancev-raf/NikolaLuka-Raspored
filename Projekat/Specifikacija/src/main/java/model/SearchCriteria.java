@@ -48,8 +48,6 @@ public class SearchCriteria implements ISearchManager {
         this.endTime = endTime;
     }
 
-
-
     @Override
     public String toString() {
         return "SearchCriteria{" +
@@ -59,45 +57,6 @@ public class SearchCriteria implements ISearchManager {
                 ", endTime=" + endTime +
                 '}';
     }
-
-
-//    @Override
-//    public void searchTermsByCriteria() {
-//        Scanner scanner = new Scanner(System.in);
-//        Map<String, String> criteria = new HashMap<>();
-//
-//        while (true) {
-//            System.out.println("Dostupni headeri za pretragu: " + String.join(", ", schedule.getHeaderIndexMap().keySet()));
-//            System.out.print("Unesite header po kojem želite da vršite pretragu: ");
-//            String header = scanner.nextLine().trim();
-//
-//            if (!schedule.getHeaderIndexMap().containsKey(header)) {
-//                System.out.println("Nepostojeći header. Pokušajte ponovo.");
-//                continue;
-//            }
-//
-//            System.out.print("Unesite vrednost za pretragu: ");
-//            String value = scanner.nextLine().trim();
-//            criteria.put(header, value);
-//
-//            System.out.print("Da li želite dodati još kriterijuma? (Da/Ne): ");
-//            String odgovor = scanner.nextLine().trim();
-//
-//            if (odgovor.equalsIgnoreCase("Ne")) {
-//                break;
-//            }
-//        }
-//
-//        List<Term> rezultati = search(criteria);
-//        if (rezultati.isEmpty()) {
-//            System.out.println("Nema rezultata za zadate kriterijume.");
-//        } else {
-//            System.out.println("Rezultati pretrage:");
-//            for (Term term : rezultati) {
-//                System.out.println(term);
-//            }
-//        }
-//    }
 
     private List<Term> search(Map<String, String> criteria) {
         List<Term> rezultati = new ArrayList<>();
@@ -134,24 +93,20 @@ public class SearchCriteria implements ISearchManager {
         }
     }
 
-    public void printFreeSlotsForTeacher() {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Unesite naziv profesora: ");
-        String teacherName = scanner.nextLine().trim();
-        // Korisnik unosi radno vreme
-        System.out.println("Unesite početak radnog vremena (HH:MM):");
-        LocalTime workStart = LocalTime.parse(scanner.nextLine().trim());
-        System.out.println("Unesite kraj radnog vremena (HH:MM):");
-        LocalTime workEnd = LocalTime.parse(scanner.nextLine().trim());
-
-        // Mapa za praćenje zauzetih termina po danima
+    public Map<String, List<LocalTime[]>> getFreeSlotsForTeacher(String teacherName, LocalTime workStart, LocalTime workEnd) {
         Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
+        Map<String, List<LocalTime[]>> freeSlots = new HashMap<>();
 
         // Pronalaženje svih termina za nastavnika
         for (Term term : schedule.getTerms()) {
             String termTeacher = (String) term.getAdditionalProperty("Nastavnik");
-            if (termTeacher != null && termTeacher.equalsIgnoreCase(teacherName)) {
+            String termTeacherSurname = termTeacher.split(" ")[0];
+            String termTeacherName = termTeacher.split(" ")[1];
+            String teacherN = teacherName.split(" ")[0];
+            String teacherS = teacherName.split(" ")[1];
+            if (termTeacher != null && (termTeacherName.equalsIgnoreCase(teacherN) && termTeacherSurname.equalsIgnoreCase(teacherS)
+                    || (termTeacherName.equalsIgnoreCase(teacherS) && termTeacherSurname.equalsIgnoreCase(teacherN)))) {
                 String dayName = term.getDay().getName();
                 LocalTime startTime = term.getTime().getStartTime();
                 LocalTime endTime = term.getTime().getEndTime();
@@ -162,29 +117,57 @@ public class SearchCriteria implements ISearchManager {
         }
 
         // Pronalaženje slobodnih termina
-        for (Map.Entry<String, List<LocalTime[]>> entry : occupiedSlots.entrySet()) {
-            String day = entry.getKey();
-            List<LocalTime[]> busyTimes = entry.getValue();
-
+        for (String day : occupiedSlots.keySet()) {
+            List<LocalTime[]> busyTimes = occupiedSlots.get(day);
             // Sortiranje zauzetih termina po početnom vremenu
             busyTimes.sort(Comparator.comparing(o -> o[0]));
 
-            // Pronalaženje slobodnih termina
+            List<LocalTime[]> dayFreeSlots = new ArrayList<>();
             LocalTime current = workStart;
-            System.out.println(day.toUpperCase() + ": slobodni termini za " + teacherName + ":");
+
             for (LocalTime[] times : busyTimes) {
                 if (current.isBefore(times[0])) {
-                    // Ispis slobodnog termina
-                    System.out.println(" - " + current + " do " + times[0]);
+                    // Dodavanje slobodnog termina u listu
+                    dayFreeSlots.add(new LocalTime[]{current, times[0]});
                 }
-                current = times[1];
+                current = times[1].isAfter(current) ? times[1] : current;
             }
+
+            // Provera posle poslednjeg zauzetog termina
             if (current.isBefore(workEnd)) {
-                // Ispis slobodnog termina do kraja radnog vremena
-                System.out.println(" - " + current + " do " + workEnd);
+                dayFreeSlots.add(new LocalTime[]{current, workEnd});
+            }
+
+            freeSlots.put(day, dayFreeSlots);
+        }
+
+        return freeSlots;
+    }
+
+    public Map<String, List<LocalTime[]>> getOccupiedSlotsForTeacher(String teacherName, LocalTime workStart, LocalTime workEnd) {
+        Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
+
+        // Pronalaženje svih termina za nastavnika
+        for (Term term : schedule.getTerms()) {
+            String termTeacher = (String) term.getAdditionalProperty("Nastavnik");
+            String termTeacherSurname = termTeacher.split(" ")[0];
+            String termTeacherName = termTeacher.split(" ")[1];
+            String teacherN = teacherName.split(" ")[0];
+            String teacherS = teacherName.split(" ")[1];
+            if (termTeacher != null && (termTeacherName.equalsIgnoreCase(teacherN) && termTeacherSurname.equalsIgnoreCase(teacherS)
+                                    || (termTeacherName.equalsIgnoreCase(teacherS) && termTeacherSurname.equalsIgnoreCase(teacherN)))) {
+                String dayName = term.getDay().getName();
+                LocalTime startTime = term.getTime().getStartTime();
+                LocalTime endTime = term.getTime().getEndTime();
+
+                // Dodavanje zauzetog termina u mapu
+                occupiedSlots.computeIfAbsent(dayName, k -> new ArrayList<>()).add(new LocalTime[]{startTime, endTime});
             }
         }
+
+        return occupiedSlots;
     }
+
 
     @Override
     public List<Term> searchTermsByCriteria(Map<String, String> criteria) {
