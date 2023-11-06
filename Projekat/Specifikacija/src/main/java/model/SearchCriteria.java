@@ -2,6 +2,8 @@ package model;
 
 import api.ISearchManager;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -168,6 +170,23 @@ public class SearchCriteria implements ISearchManager {
         return occupiedSlots;
     }
 
+    public String parseDay (LocalDate date){
+        String dan = "";
+        if(date.getDayOfWeek().equals(DayOfWeek.MONDAY)){
+            dan = "PON";
+        } else if(date.getDayOfWeek().equals(DayOfWeek.TUESDAY)){
+            dan = "UTO";
+        } else if(date.getDayOfWeek().equals(DayOfWeek.WEDNESDAY)){
+            dan = "SRE";
+        }
+        else if(date.getDayOfWeek().equals(DayOfWeek.THURSDAY)){
+            dan = "CET";
+        }
+        else if(date.getDayOfWeek().equals(DayOfWeek.FRIDAY)){
+            dan = "PET";
+        }
+        return dan;
+    }
 
     @Override
     public List<Term> searchTermsByCriteria(Map<String, String> criteria) {

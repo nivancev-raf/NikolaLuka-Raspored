@@ -40,7 +40,7 @@ public class CommandLineInterface {
         }
         System.out.println("Unesite period vazenja rasporeda u formatu: dd.MM.yyyy-dd.MM.yyyy   (primer: 01.01.2020-11.01.2020)");
 //        String periodVazenja = scanner.nextLine();
-        String periodVazenja = "01.01.2020-11.01.2020"; // vratiti scanner kasnije
+        String periodVazenja = "01.10.2020-11.10.2020"; // vratiti scanner kasnije
         try {
             schedule.setPeriodVazenja(periodVazenja);
             System.out.println("Raspored vazi: ");
@@ -74,6 +74,8 @@ public class CommandLineInterface {
         System.out.println("3. Pretrazi Termine");
         System.out.println("4. Pretrazi Slobone Termine za Nastavnika");
         System.out.println("5. Izlistaj zauzete termine za Nastavnika");
+        System.out.println("6. Premestanje termina");
+        System.out.println("7. Stampanje celog rasporeda");
 
     }
 
@@ -99,6 +101,9 @@ public class CommandLineInterface {
                 searchHandler.printOccupiedSlotsForTeacherCLI();
                 break;
             case "6":
+                editSchedule();
+                break;
+            case "7":
                 // printaj ceo termin
                 printSchedule();
                 break;
@@ -117,6 +122,11 @@ public class CommandLineInterface {
             System.out.println("Additional Data: " + term.getAdditionalProperties());
             System.out.println("-----");
         }
+    }
+
+
+    public void editSchedule(){
+
     }
 
 }

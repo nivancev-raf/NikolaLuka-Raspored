@@ -3,7 +3,6 @@ package model;
 public class Day {
     String name;
 
-
     public Day(String name) {
         this.name = name;
     }
