@@ -1,3 +1,5 @@
+package handlers;
+
 import model.Schedule;
 import model.SearchCriteria;
 import model.Term;
@@ -17,7 +19,7 @@ public class SearchHandler {
         this.searchCriteria = searchCriteria;
     }
 
-    void searchAndPrintTerms() {
+    public void searchAndPrintTerms() {
         Map<String, String> criteria = new HashMap<>();
         Scanner scanner = new Scanner(System.in);
 
@@ -54,7 +56,7 @@ public class SearchHandler {
         }
     }
 
-    void printFreeSlotsForTeacherCLI() {
+    public void printFreeSlotsForTeacherCLI() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Unesite naziv profesora: ");
         String teacherName = scanner.nextLine().trim();
@@ -75,7 +77,7 @@ public class SearchHandler {
         }
     }
 
-    void printOccupiedSlotsForTeacherCLI() {
+    public void printOccupiedSlotsForTeacherCLI() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Unesite naziv profesora: ");
         String teacherName = scanner.nextLine().trim();

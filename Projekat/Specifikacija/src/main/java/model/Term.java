@@ -12,7 +12,7 @@ public class Term implements ITermManager {
     private Room room;
     private Time time;
     private List<Term> termList = new ArrayList<>();
-    private Map<String, Object> additionalProperties;
+    private Map<String, String> additionalProperties;
     private Schedule schedule;
 
     public Term(Schedule schedule) {
@@ -42,11 +42,7 @@ public class Term implements ITermManager {
         return additionalProperties.get(key);
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+    public void setAdditionalProperties(Map<String, String> additionalProperties) {
         this.additionalProperties = additionalProperties;
     }
 
@@ -104,86 +100,39 @@ public class Term implements ITermManager {
 
     }
 
-    public Term createTermFromInput() {
-        Scanner scanner = new Scanner(System.in);
-        Map<String, Object> additionalProperties = new HashMap<>();
+    @Override
+    public Map<String, String> getAdditionalProperties() {
+        return additionalProperties;
+    }
 
-        System.out.println("Unesite dan:");
-        String dayInput = scanner.nextLine().trim();
+    @Override
+    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs) {
         Day day = new Day(dayInput);
-
-        System.out.println("Unesite vreme (npr. 11:15-13):");
-        String timeInput = scanner.nextLine().trim();
         String[] parts = timeInput.split("-");
         LocalTime startTime = parseTime(parts[0].trim());
         LocalTime endTime = parseTime(parts[1].trim());
         Time time = new Time(startTime, endTime);
-
-        System.out.println("Unesite učionicu:");
-        String roomInput = scanner.nextLine().trim();
         Room room = new Room(roomInput);
 
         if (!isTermOccupied(day.getName(), startTime, endTime, room.getName())) {
             Term newTerm = new Term(room, day, time);
+            if (additionalInputs != null){
+                Map<String, String> additionalProperties = new HashMap<>();
 
-            System.out.println("Unesite dodatne informacije za termin. Kada završite, unesite 'kraj'.");
-            while (true) {
-                Set<String> availableHeaders = new HashSet<>(schedule.getHeaderIndexMap().keySet());
-                availableHeaders.removeAll(Arrays.asList("Dan", "Termin", "Učionica"));
-                availableHeaders.removeAll(additionalProperties.keySet());
-
-                if (availableHeaders.isEmpty()) {
-                    System.out.println("Svi headeri su popunjeni.");
-                    break;
+                for (Map.Entry<String, String> entry : additionalInputs.entrySet()) {
+                    additionalProperties.put(entry.getKey(), entry.getValue());
                 }
 
-                System.out.println("Dostupni headeri: " + String.join(", ", availableHeaders));
-                System.out.print("Unesite header: ");
-                String header = scanner.nextLine().trim();
-
-                if (header.equalsIgnoreCase("kraj")) {
-                    break;
-                }
-
-                if (!availableHeaders.contains(header)) {
-                    System.out.println("Nepostojeći ili već unesen header. Pokušajte ponovo.");
-                    continue;
-                }
-
-                System.out.print("Unesite vrednost: ");
-                String value = scanner.nextLine().trim();
-                additionalProperties.put(header, value);
+                newTerm.setAdditionalProperties(additionalProperties);
             }
-
-            newTerm.setAdditionalProperties(additionalProperties);
             return newTerm;
         } else {
-            System.out.println("Termin je zauzet.");
-            return null;
+            return null; // vraca null ako je termin zauzet
         }
     }
 
-    @Override
-    public void addTerm() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            Term newTerm = createTermFromInput();
-            if (newTerm != null) {
-                schedule.getTerms().add(newTerm);
-//                termList.add(newTerm);
-                System.out.println("Termin je uspešno dodat.");
-                System.out.println(schedule.getTerms().size());
-                System.out.println(schedule.getTerms().get(schedule.getTerms().size()-1));
-            }
 
-            System.out.print("Da li želite dodati još jedan termin? (Da/Ne): ");
-            String odgovor = scanner.nextLine().trim();
-            if (odgovor.equalsIgnoreCase("Ne")) {
-//                schedule.printSchedule(); TODO: printSchedule je sada u konzolnoj app, treba namestiti da ovo radi
-                break;
-            }
-        }
-    }
+
     private LocalTime parseTime(String time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
         time = time.replaceAll("\"", "");
@@ -192,6 +141,7 @@ public class Term implements ITermManager {
         }
         return LocalTime.parse(time, formatter);
     }
+
     public boolean isTermOccupied(String day, LocalTime startTime, LocalTime endTime, String room) {
         LocalTime start = parseTime(String.valueOf(startTime));
         LocalTime end = parseTime(String.valueOf(endTime));

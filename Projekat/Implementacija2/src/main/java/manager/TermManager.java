@@ -3,6 +3,9 @@ package manager;
 import api.ITermManager;
 import model.Term;
 
+import java.util.List;
+import java.util.Map;
+
 public class TermManager implements ITermManager {
 
     private ScheduleManager scheduleManager;
@@ -11,28 +14,34 @@ public class TermManager implements ITermManager {
         this.scheduleManager = scheduleManager;
     }
 
+
     @Override
-    public void getTermById(String s) {
+    public List<Term> getAllTerms() {
+        return null;
+    }
+
+    @Override
+    public void updateTerm(Term termId, Term updatedTerm) {
 
     }
 
     @Override
-    public void getAllTerms() {
+    public void deleteTerm(Term termId) {
 
     }
 
     @Override
-    public void updateTerm(String s, Term term) {
+    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs) {
+        return null;
+    }
+
+    @Override
+    public void addAdditionalProperty(String key, Object value) {
 
     }
 
     @Override
-    public void deleteTerm(String s) {
-
-    }
-
-    @Override
-    public void addTerm(Term term) {
-
+    public Map<String, String> getAdditionalProperties() {
+        return null;
     }
 }

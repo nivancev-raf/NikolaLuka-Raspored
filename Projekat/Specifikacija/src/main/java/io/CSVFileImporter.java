@@ -44,7 +44,7 @@ public class CSVFileImporter implements IFileImportExport {
                     Time time = new Time(startTime, endTime);
                     Term term = new Term(room, day, time);
 
-                    Map<String, Object> additionalProperties = new HashMap<>();
+                    Map<String, String> additionalProperties = new HashMap<>();
                     for (Map.Entry<String, Integer> entry : headerIndexMap.entrySet()) {
                         if (!entry.getKey().equals("Dan") && !entry.getKey().equals("Učionica") && !entry.getKey().equals("Termin")) {
                             String additionalValue = values[entry.getValue()].replace("\"", "").trim();
