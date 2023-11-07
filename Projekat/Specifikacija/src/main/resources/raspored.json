@@ -1,0 +1,42 @@
+[
+  {
+    "Room": "RAF1",
+    "StartDate": "10/29/2023",
+    "EndDate": "10/29/2023",
+    "StartTime": "09:15",
+    "EndTime": "11:15",
+    "Subject": "UUP",
+    "Professor": "Mladen Jovanovic",
+    "Computer": "YES"
+  },
+  {
+    "Room": "RAF2",
+    "StartDate": "10/29/2023",
+    "EndDate": "10/29/2023",
+    "StartTime": "09:30",
+    "EndTime": "12:30",
+    "Subject": "SK",
+    "Professor": "Bojana Dimic Surla",
+    "Computer": "NO"
+  },
+  {
+    "Room": "RAF3",
+    "StartDate": "10/29/2023",
+    "EndDate": "10/29/2023",
+    "StartTime": "10:00",
+    "EndTime": "13:00",
+    "Subject": "UUP",
+    "Professor": "Lazar Dejanovic",
+    "Computer": "YES"
+  },
+  {
+    "Room": "RAF2",
+    "StartDate": "10/30/2023",
+    "EndDate": "10/30/2023",
+    "StartTime": "15:30",
+    "EndTime": "17:30",
+    "Subject": "UUP",
+    "Professor": "Vanja Matovic",
+    "Computer": "YES"
+  }
+]

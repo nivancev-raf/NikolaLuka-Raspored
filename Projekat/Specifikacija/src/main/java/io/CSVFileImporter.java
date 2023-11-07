@@ -1,6 +1,6 @@
 package io;
 
-import api.IFileImportExport;
+import api.FileImportExport;
 import model.*;
 
 import java.io.BufferedReader;
@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CSVFileImporter implements IFileImportExport {
+public class CSVFileImporter extends FileImportExport {
 
     private Map<String, Integer> headerIndexMap;
 
@@ -60,6 +60,8 @@ public class CSVFileImporter implements IFileImportExport {
             e.printStackTrace();
         }
     }
+
+
 
     @Override
     public void exportFile(String path) {
