@@ -29,6 +29,9 @@ public class TermHandler {
         System.out.println("Unesite učionicu:");
         String roomInput = scanner.nextLine().trim();
 
+        System.out.println("Unesite period:");
+        String periodInput = scanner.nextLine().trim();
+
 
         System.out.println("Da li želite da unesete dodatna polja? (Da/Ne)");
         String answer = scanner.nextLine().trim();
@@ -63,7 +66,7 @@ public class TermHandler {
             System.out.println("Dodatna polja nisu uneta.");
         }
 
-        Term newTerm = termManager.addTerm(dayInput, timeInput, roomInput, termManager.getAdditionalProperties());
+        Term newTerm = termManager.addTerm(dayInput, timeInput, roomInput, termManager.getAdditionalProperties(),periodInput);
 
         if (newTerm != null) {
             System.out.println("Broj termina: PRE " + schedule.getTerms().size());

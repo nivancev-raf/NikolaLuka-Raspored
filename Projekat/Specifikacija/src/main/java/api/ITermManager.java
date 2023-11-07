@@ -11,7 +11,7 @@ public interface ITermManager {
     void updateTerm(Term termId, Term updatedTerm); // azurira info o terminu
     void deleteTerm(Term termId);
 
-    Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs);
+    Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String period);
     void addAdditionalProperty(String key, Object value);
     Map<String, String> getAdditionalProperties();
 
