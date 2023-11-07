@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -34,15 +35,21 @@ public class CSVFileImporter extends FileImportExport {
                     String dayValue = values[headerIndexMap.get("Dan")].replaceAll("^\"|\"$", "").trim();
                     String roomValue = values[headerIndexMap.get("Učionica")].replaceAll("^\"|\"$", "").trim();
                     String timeValue = values[headerIndexMap.get("Termin")].replaceAll("^\\s+|\\s+$", "").trim();
+                    String periodValue = values[headerIndexMap.get("Period")].replaceAll("^\\s+|\\s+$", "").trim();
 
                     String[] timeParts = timeValue.split("-");
                     LocalTime startTime = parseTime(timeParts[0].trim());
                     LocalTime endTime = parseTime(timeParts[1].trim());
 
+                    String[] periodParts = timeValue.split("-");
+                    LocalDate startPeriod = LocalDate.parse(periodParts[0].trim());
+                    LocalDate endPeriod = LocalDate.parse(periodParts[1].trim());
+
                     Day day = Schedule.getInstance().getDays().computeIfAbsent(dayValue, Day::new);
                     Room room = Schedule.getInstance().getRooms().computeIfAbsent(roomValue, Room::new);
                     Time time = new Time(startTime, endTime);
-                    Term term = new Term(room, day, time);
+                    Period period = new Period(startPeriod,endPeriod);
+                    Term term = new Term(room, day, time,period);
 
                     Map<String, String> additionalProperties = new HashMap<>();
                     for (Map.Entry<String, Integer> entry : headerIndexMap.entrySet()) {
