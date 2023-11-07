@@ -4,6 +4,7 @@ import api.ITermManager;
 import handlers.SearchHandler;
 import handlers.TermHandler;
 import io.CSVFileImporter;
+import io.JsonFileImporter;
 import model.Schedule;
 import model.SearchCriteria;
 import model.Term;
@@ -16,6 +17,9 @@ public class CommandLineInterface {
     private SearchCriteria searchCriteria;
     private SearchHandler searchHandler;
     private TermHandler termHandler;
+    private JsonFileImporter jsonFileImporter;
+    private CSVFileImporter csvFileImporter;
+
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
         this.termManager = new Term(schedule);
@@ -24,17 +28,34 @@ public class CommandLineInterface {
         this.termHandler = new TermHandler(schedule, termManager);
     }
 
+    private void fileType(String s){
+        if(s.equalsIgnoreCase("JSON")){
+            jsonFileImporter = new JsonFileImporter();
+        }
+        else if(s.equalsIgnoreCase("CSV")){
+            csvFileImporter = new CSVFileImporter();
+        }
+        else{
+            System.out.println("Pogresan unos");
+        }
+    }
+
     public void run() {
-        CSVFileImporter csvFileImporter = new CSVFileImporter();
+        System.out.println("Da li zelite da ucitate JSON ili CSV fajl? (JSON/CSV)");
         Scanner scanner = new Scanner(System.in);
+        String answer = scanner.nextLine();
+        fileType(answer);
+
         System.out.println("Unesite putanju do fajla: (/raspored.csv)");
         //String filePath = scanner.nextLine();
-        String filePath = "/raspored.csv"; // vratiti scanner kasnije
+        String filePath = "C:\\Users\\User\\Desktop\\Softverske komponente\\ProjekatGit\\Projekat\\Specifikacija\\src\\main\\resources\\raspored.json"; // vratiti scanner kasnije
         try {
-            csvFileImporter.importFile(filePath);
+//            csvFileImporter.importFile(filePath);
+            jsonFileImporter.importFile(filePath);
             System.out.println("Uspesno ucitan fajl: " + filePath);
 
         } catch (Exception e) {
+            System.out.println(e);
             System.out.println("FILE: Los unos putanje fajla ili nepostojeci fajl");
             return;
         }
