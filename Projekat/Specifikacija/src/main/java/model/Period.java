@@ -37,6 +37,6 @@ public class Period {
 
     @Override
     public String toString() {
-        return startPeriod + "-" + endPeriod;
+        return startPeriod + ":" + endPeriod;
     }
 }
