@@ -6,6 +6,7 @@ import model.Term;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -50,8 +51,10 @@ public class SearchHandler {
             System.out.println("Neispravan format datuma. Pokušajte ponovo.");
             return;
         }
-
-        if(date.isAfter(schedule.getStartDate()) && date.isBefore(schedule.getEndDate())) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate startPeriod = LocalDate.parse(schedule.getPeriodPocetak().trim(), dateFormatter);
+        LocalDate endPeriod = LocalDate.parse(schedule.getPeriodKraj().trim(), dateFormatter);
+        if(date.isAfter(startPeriod) && date.isBefore(endPeriod)) {
             String dan = searchCriteria.parseDay(date);
             List<Term> results = new ArrayList<>();
             for (Term term : schedule.getTerms()) {

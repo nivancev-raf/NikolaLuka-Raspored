@@ -166,7 +166,6 @@ public class SearchCriteria implements ISearchManager {
                 occupiedSlots.computeIfAbsent(dayName, k -> new ArrayList<>()).add(new LocalTime[]{startTime, endTime});
             }
         }
-
         return occupiedSlots;
     }
 

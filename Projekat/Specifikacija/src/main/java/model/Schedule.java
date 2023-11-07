@@ -1,9 +1,4 @@
 package model;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Schedule {
@@ -15,8 +10,8 @@ public class Schedule {
     private List<Term> terms;
     private Map<Term, Map<String, String>> additionalData;
     private Map<String, Integer> headerIndexMap;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String periodPocetak;
+    private String periodKraj;
 
     private Schedule() {
         initSchedule();
@@ -36,15 +31,6 @@ public class Schedule {
         this.terms = new ArrayList<>();
         this.additionalData = new HashMap<>();
         this.headerIndexMap = new HashMap<>();
-
-    }
-    
-
-    public void setPeriodVazenja(String period){
-        String[] dates = period.split("-");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        this.startDate = LocalDate.parse(dates[0], formatter);
-        this.endDate = LocalDate.parse(dates[1], formatter);
     }
 
     public List<Term> getTerms() {
@@ -83,21 +69,19 @@ public class Schedule {
         return headerIndexMap;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public String getPeriodPocetak() {
+        return periodPocetak;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setPeriodPocetak(String periodPocetak) {
+        this.periodPocetak = periodPocetak;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public String getPeriodKraj() {
+        return periodKraj;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setPeriodKraj(String periodKraj) {
+        this.periodKraj = periodKraj;
     }
-
-
 }
