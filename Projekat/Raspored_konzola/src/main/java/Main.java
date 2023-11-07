@@ -5,6 +5,5 @@ public class Main {
         CommandLineInterface cli = new CommandLineInterface();
         cli.run();
     }
-
 }
 

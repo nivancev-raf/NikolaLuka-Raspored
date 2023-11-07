@@ -11,9 +11,6 @@ public class Time {
     private LocalTime startTime;
     private LocalTime endTime;
 
-
-
-
     private Map<String, Object> additionalProperties;
 
     public Time(LocalTime startTime, LocalTime endTime) {

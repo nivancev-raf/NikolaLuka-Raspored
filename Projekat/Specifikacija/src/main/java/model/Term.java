@@ -2,6 +2,7 @@ package model;
 
 import api.ITermManager;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -11,6 +12,7 @@ public class Term implements ITermManager {
     private Day day;
     private Room room;
     private Time time;
+    private Period period;
     private List<Term> termList = new ArrayList<>();
     private Map<String, String> additionalProperties;
     private Schedule schedule;
@@ -19,10 +21,11 @@ public class Term implements ITermManager {
         this.schedule = schedule;
     }
 
-    public Term(Room room, Day day, Time time) {
+    public Term(Room room, Day day, Time time,Period period) {
         this.room = room;
         this.day = day;
         this.time = time;
+        this.period = period;
         this.additionalProperties = new HashMap<>();
     }
 
@@ -70,13 +73,21 @@ public class Term implements ITermManager {
         this.termList = termList;
     }
 
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
     @Override
     public String toString() {
         return "Term{" +
                 "day=" + day +
                 ", room=" + room +
                 ", time=" + time +
-                ", additionalProperties=" + additionalProperties +
+                ", additionalProperties=" + additionalProperties + ",period=" + period +
                 '}';
     }
 
@@ -106,16 +117,20 @@ public class Term implements ITermManager {
     }
 
     @Override
-    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs) {
+    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String periodInput) {
         Day day = new Day(dayInput);
         String[] parts = timeInput.split("-");
         LocalTime startTime = parseTime(parts[0].trim());
         LocalTime endTime = parseTime(parts[1].trim());
+        String[] periodParts = periodInput.split("-");
+        LocalDate startPeriod = LocalDate.parse(periodParts[0].trim());
+        LocalDate endPeriod = LocalDate.parse(periodParts[1].trim());
+        Period period = new Period(startPeriod,endPeriod);
         Time time = new Time(startTime, endTime);
         Room room = new Room(roomInput);
 
         if (!isTermOccupied(day.getName(), startTime, endTime, room.getName())) {
-            Term newTerm = new Term(room, day, time);
+            Term newTerm = new Term(room, day, time,period);
             if (additionalInputs != null){
                 Map<String, String> additionalProperties = new HashMap<>();
 

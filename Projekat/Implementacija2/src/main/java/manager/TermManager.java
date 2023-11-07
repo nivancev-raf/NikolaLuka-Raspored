@@ -31,7 +31,7 @@ public class TermManager implements ITermManager {
     }
 
     @Override
-    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs) {
+    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String period) {
         return null;
     }
 

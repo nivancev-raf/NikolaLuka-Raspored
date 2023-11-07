@@ -28,7 +28,7 @@ public class CommandLineInterface {
         CSVFileImporter csvFileImporter = new CSVFileImporter();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Unesite putanju do fajla: (/raspored.csv)");
-//        String filePath = scanner.nextLine();
+        //String filePath = scanner.nextLine();
         String filePath = "/raspored.csv"; // vratiti scanner kasnije
         try {
             csvFileImporter.importFile(filePath);
