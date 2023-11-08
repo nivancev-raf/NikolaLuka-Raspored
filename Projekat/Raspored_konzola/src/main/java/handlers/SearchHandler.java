@@ -54,7 +54,8 @@ public class SearchHandler {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate startPeriod = LocalDate.parse(schedule.getPeriodPocetak().trim(), dateFormatter);
         LocalDate endPeriod = LocalDate.parse(schedule.getPeriodKraj().trim(), dateFormatter);
-        if(date.isAfter(startPeriod) && date.isBefore(endPeriod)) {
+//        if(date.isAfter(startPeriod) && date.isBefore(endPeriod) || date.isEqual(startPeriod) || date.isEqual(endPeriod)) { // uzima i prvi i poslednji dan perioda
+            if(date.isAfter(startPeriod) && date.isBefore(endPeriod)) {
             String dan = searchCriteria.parseDay(date);
             List<Term> results = new ArrayList<>();
             for (Term term : schedule.getTerms()) {
