@@ -73,12 +73,15 @@ public class SearchHandler {
 
     private void searchByCriteria(Scanner scanner) {
         Map<String, String> criteria = new HashMap<>();
+        Set<String> originalSet = new HashSet<>(schedule.getHeaderIndexMap().keySet());
+        Set<String> set = new HashSet<>(originalSet); // Kopirajte originalni skup
+
         while (true) {
-            System.out.println("Dostupni headeri za pretragu: " + String.join(", ", schedule.getHeaderIndexMap().keySet()));
+            System.out.println("Dostupni headeri za pretragu: " + String.join(", ", set));
             System.out.print("Unesite header po kojem želite da vršite pretragu: ");
             String header = scanner.nextLine().trim();
 
-            if (!schedule.getHeaderIndexMap().containsKey(header)) {
+            if (!originalSet.contains(header)) {
                 System.out.println("Nepostojeći header. Pokušajte ponovo.");
                 continue;
             }
@@ -94,6 +97,8 @@ public class SearchHandler {
                 break;
             }
         }
+
+
 
         List<Term> results = searchCriteria.searchTermsByCriteria(criteria);
         if (results.isEmpty()) {

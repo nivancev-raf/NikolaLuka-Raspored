@@ -14,5 +14,4 @@ public interface ITermManager {
     void addAdditionalProperty(String key, Object value);
     Map<String, String> getAdditionalProperties();
 
-
 }

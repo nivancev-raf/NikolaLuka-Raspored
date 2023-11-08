@@ -1,4 +1,6 @@
 package model;
+import io.CSVFileImporter;
+
 import java.util.*;
 
 public class Schedule {
@@ -8,11 +10,13 @@ public class Schedule {
     private Map<String, Room> rooms;
     private Map<String, Time> times;
     private List<Term> terms;
-    private Map<Term, Map<String, String>> additionalData;
+    private Map<String, String> additionalData;
     private Map<String, Integer> headerIndexMap;
     private String periodPocetak;
     private String periodKraj;
 
+
+    private CSVFileImporter csvFileImporter;
     private Schedule() {
         initSchedule();
     }
@@ -37,8 +41,12 @@ public class Schedule {
         return terms;
     }
 
-    public Map<Term, Map<String, String>> getAdditionalData() {
+    public Map<String, String> getAdditionalData() {
         return additionalData;
+    }
+
+    public void setAdditionalData(Map<String, String> additionalData) {
+        this.additionalData = additionalData;
     }
 
     public static void setInstance(Schedule instance) {
