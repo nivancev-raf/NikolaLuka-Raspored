@@ -47,6 +47,8 @@ public class JsonFileImporter extends FileImportExport {
                 Term term = new Term(room, day, time, period);
 
 
+//                Schedule.getInstance().getHeaderIndexMap().put()
+
                 for (Map.Entry<String, JsonElement> entrySet : jsonObject.entrySet()) {
                     String key = entrySet.getKey();
                     // Check if the key is not one of the fixed properties
@@ -55,7 +57,6 @@ public class JsonFileImporter extends FileImportExport {
                         term.getAdditionalProperties().put(key, entrySet.getValue().getAsString());
                     }
                 }
-
                 return term;
             }
         });

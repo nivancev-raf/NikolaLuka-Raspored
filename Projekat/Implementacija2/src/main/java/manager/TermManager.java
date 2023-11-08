@@ -1,6 +1,7 @@
 package manager;
 
 import api.ITermManager;
+import model.Schedule;
 import model.Term;
 
 import java.util.List;
@@ -42,6 +43,6 @@ public class TermManager implements ITermManager {
 
     @Override
     public Map<String, String> getAdditionalProperties() {
-        return null;
+        return Schedule.getInstance().getAdditionalData();
     }
 }

@@ -22,5 +22,4 @@ public interface ITermManager {
     void updateScheduleWithNewTerms(Term oldTerm, Term originalTerm, Term newTerm);
     boolean isDateWithinTermPeriod(Term term, LocalDate date);
 
-
 }

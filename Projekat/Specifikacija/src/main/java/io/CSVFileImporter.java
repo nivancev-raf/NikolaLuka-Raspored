@@ -1,6 +1,7 @@
 package io;
 
 import api.FileImportExport;
+import api.ITermManager;
 import model.*;
 
 import java.io.BufferedReader;
@@ -15,9 +16,7 @@ import java.util.Map;
 
 public class CSVFileImporter extends FileImportExport {
 
-    private Map<String, Integer> headerIndexMap;
-
-
+    private Map<String, Integer> headerIndexMap = Schedule.getInstance().getHeaderIndexMap();
     @Override
     public void importFile(String path) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -26,12 +25,9 @@ public class CSVFileImporter extends FileImportExport {
             String line = br.readLine();
             if (line != null) {
                 String[] headers = line.split(",");
-                Map<String, Integer> headerIndexMap = new HashMap<>();
                 for (int i = 0; i < headers.length; i++) {
                     headerIndexMap.put(headers[i].trim().replaceAll("^\"|\"$", ""), i);
                 }
-                System.out.println("header index map " + headerIndexMap);
-
                 while ((line = br.readLine()) != null) {
                     int i = 0;
                     String[] values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
@@ -89,4 +85,7 @@ public class CSVFileImporter extends FileImportExport {
         return LocalTime.parse(time, formatter);
     }
 
+    public Map<String, Integer> getHeaderIndexMap() {
+        return headerIndexMap;
+    }
 }

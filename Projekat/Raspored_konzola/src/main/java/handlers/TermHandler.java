@@ -35,17 +35,20 @@ public class TermHandler {
 
         System.out.println("Da li želite da unesete dodatna polja? (Da/Ne)");
         String answer = scanner.nextLine().trim();
-        if (answer.equalsIgnoreCase("Da")) {
-            while(true){
-                Set<String> availableHeaders = new HashSet<>(schedule.getHeaderIndexMap().keySet());
-                availableHeaders.removeAll(Arrays.asList("Dan", "Termin", "Učionica"));
-                availableHeaders.removeAll(termManager.getAdditionalProperties().keySet());
+        Set<String> originalSet = new HashSet<>(schedule.getHeaderIndexMap().keySet());
+        Set<String> set = new HashSet<>(originalSet); // Kopirajte originalni skup
 
-                if (availableHeaders.isEmpty()) {
+        if (answer.equalsIgnoreCase("Da")) {
+            while (true) {
+                Set<String> tempSet = new HashSet<>(set); // Napravite kopiju skupa
+
+                tempSet.removeAll(Arrays.asList("Dan", "Termin", "Učionica", "Period"));
+
+                if (tempSet.isEmpty()) {
                     System.out.println("Svi headeri su popunjeni.");
                     break;
                 }
-                System.out.println("Dostupni headeri: " + String.join(", ", availableHeaders));
+                System.out.println("Dostupni headeri: " + String.join(", ", tempSet));
                 System.out.print("Unesite header: ");
                 String header = scanner.nextLine().trim();
 
@@ -53,20 +56,21 @@ public class TermHandler {
                     break;
                 }
 
-                if (!availableHeaders.contains(header)) {
+                if (!tempSet.contains(header)) {
                     System.out.println("Nepostojeći ili već unesen header. Pokušajte ponovo.");
                     continue;
                 }
                 System.out.print("Unesite vrednost: ");
                 String value = scanner.nextLine().trim();
-                termManager.getAdditionalProperties().put(header, value);
+                Schedule.getInstance().getAdditionalData().put(header, value);
+                set.remove(header); // Izbacite element iz izvornog skupa
             }
-
-        }else{
+        }
+        else{
             System.out.println("Dodatna polja nisu uneta.");
         }
 
-        Term newTerm = termManager.addTerm(dayInput, timeInput, roomInput, termManager.getAdditionalProperties(),periodInput);
+        Term newTerm = termManager.addTerm(dayInput, timeInput, roomInput, Schedule.getInstance().getAdditionalData(), periodInput);
 
         if (newTerm != null) {
             System.out.println("Broj termina: PRE " + schedule.getTerms().size());
