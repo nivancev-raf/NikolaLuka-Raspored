@@ -30,6 +30,7 @@ public class CSVFileImporter extends FileImportExport {
                 for (int i = 0; i < headers.length; i++) {
                     headerIndexMap.put(headers[i].trim().replaceAll("^\"|\"$", ""), i);
                 }
+                System.out.println("header index map " + headerIndexMap);
 
                 while ((line = br.readLine()) != null) {
                     int i = 0;
