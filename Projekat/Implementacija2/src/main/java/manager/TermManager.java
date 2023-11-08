@@ -26,13 +26,13 @@ public class TermManager implements ITermManager {
     }
 
     @Override
-    public void deleteTerm(Term termId) {
-
+    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String period) {
+        return null;
     }
 
     @Override
-    public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String period) {
-        return null;
+    public void deleteTerm(String teacherName, String roomName, String time, String day) {
+
     }
 
     @Override

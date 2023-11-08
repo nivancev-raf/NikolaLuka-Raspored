@@ -52,6 +52,13 @@ public class Time {
     }
 
 
+    public boolean overlaps(Time other) {
+        return !(
+                this.endTime.isBefore(other.startTime) ||
+                        this.startTime.isAfter(other.endTime)
+        );
+    }
+
     @Override
     public String toString() {
         return startTime + "-" + endTime;

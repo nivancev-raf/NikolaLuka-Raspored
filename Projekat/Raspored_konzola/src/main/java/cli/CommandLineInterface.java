@@ -102,6 +102,7 @@ public class CommandLineInterface {
                 break;
             case "2":
                 // Logika za brisanje termina
+                deleteTerm();
                 break;
             case "3":
                 // Logika za pretragu termina
@@ -158,7 +159,6 @@ public class CommandLineInterface {
         String timeRange = "13:15-15:00";
 
         Term termToModify = null;
-
         for(Term term: terms){
             if(term.getAdditionalProperty("Nastavnik").equals(teacherName) && term.getRoom().getName().equals(roomName)
             && term.getTime().toString().equals(timeRange)){
@@ -195,21 +195,75 @@ public class CommandLineInterface {
             newRoom = new Room(newRoomName);
         }
 
+        LocalTime newStartTime = null;
+        LocalTime newEndTime = null;
+
         if (choice == 2 || choice == 3) {
             System.out.println("Unesite novo vreme (HH:mm-HH:mm):");
             String newTimeRange = scanner.nextLine();
             String[] timeParts = newTimeRange.split("-");
-            LocalTime newStartTime = LocalTime.parse(timeParts[0].trim(), DateTimeFormatter.ofPattern("HH:mm"));
-            LocalTime newEndTime = LocalTime.parse(timeParts[1].trim(), DateTimeFormatter.ofPattern("HH:mm"));
+            newStartTime = LocalTime.parse(timeParts[0].trim(), DateTimeFormatter.ofPattern("HH:mm"));
+            newEndTime = LocalTime.parse(timeParts[1].trim(), DateTimeFormatter.ofPattern("HH:mm"));
             newTime = new Time(newStartTime, newEndTime);
         }
+
+
 
         // Kreiranje novog termina sa novim vrednostima od unetog datuma
         Term newTerm = new Term(newRoom, termToModify.getDay(), newTime,
                 new Period(splitDate.plusDays(1), termToModify.getPeriod().getEndPeriod()));
         newTerm.setAdditionalProperties(termToModify.getAdditionalProperties());
 
-        System.out.println("stari izmenji termin: " + originalTerm);
+        if(isTermAvailable(newTerm,terms)){
+            terms.add(originalTerm);
+            terms.add(newTerm);
+            terms.remove(termToModify);
+        } else {
+            System.out.println("Nije moguce dodati termin");
+        }
+
+        System.out.println("stari izmenjeni termin: " + originalTerm);
         System.out.println("novi dodati termin: " + newTerm);
     }
+
+    public boolean isTermAvailable(Term newTerm, List<Term> existingTerms) {
+        for (Term existingTerm : existingTerms) {
+            // Provera da li se vreme i učionica poklapaju
+            if (newTerm.getRoom().getName().equals(existingTerm.getRoom().getName()) &&
+                    newTerm.getTime().overlaps(existingTerm.getTime()) && newTerm.getDay().equals(existingTerm.getDay())) {
+                // Ako se vreme i učionica poklapaju, proveravamo da li se poklapaju i periodi
+                if (newTerm.getPeriod().overlaps(existingTerm.getPeriod())) {
+                    // Ako se i periodi poklapaju, termin nije dostupan
+                    return false;
+                }
+            }
+        }
+        // Ako nema poklapanja, termin je dostupan
+        return true;
+    }
+
+    public void deleteTerm() {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Unesite dan:");
+        String dayInput = scanner.nextLine().trim();
+
+        System.out.println("Unesite vreme (npr. 11:15-13):");
+        String timeInput = scanner.nextLine().trim();
+
+        System.out.println("Unesite učionicu:");
+        String roomInput = scanner.nextLine().trim();
+
+        System.out.println("Unesite nastavnika:");
+        String teacherInput = scanner.nextLine().trim();
+
+        for(Term term: schedule.getTerms()){
+            if(term.getAdditionalProperties().get("Nastavnik").equals(teacherInput) && term.getRoom().getName().equals(roomInput) && term.getTime().toString().equals(timeInput) &&
+                    term.getDay().getName().equals(dayInput)){
+                schedule.getTerms().remove(term);
+                break;
+            }
+        }
+    }
+
 }

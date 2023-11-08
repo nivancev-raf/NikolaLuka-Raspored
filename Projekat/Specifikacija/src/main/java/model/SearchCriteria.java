@@ -183,6 +183,10 @@ public class SearchCriteria implements ISearchManager {
         }
         else if(date.getDayOfWeek().equals(DayOfWeek.FRIDAY)){
             dan = "PET";
+        } else if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY)){
+            dan = "SUB";
+        } else if(date.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+            dan = "NED";
         }
         return dan;
     }

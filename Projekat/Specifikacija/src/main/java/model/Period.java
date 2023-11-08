@@ -35,6 +35,13 @@ public class Period {
         this.endPeriod = endPeriod;
     }
 
+    public boolean overlaps(Period other) {
+        return !(
+                this.endPeriod.isBefore(other.startPeriod) ||
+                        this.startPeriod.isAfter(other.endPeriod)
+        );
+    }
+
     @Override
     public String toString() {
         return startPeriod + ":" + endPeriod;

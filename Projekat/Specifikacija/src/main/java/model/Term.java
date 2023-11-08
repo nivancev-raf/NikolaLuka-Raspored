@@ -102,8 +102,15 @@ public class Term implements ITermManager {
     }
 
     @Override
-    public void deleteTerm(Term termId) {
-
+    public void deleteTerm(String teacherName, String roomName, String time, String day) {
+//        for(Term term: termList){
+//            System.out.println("Uneseno: " + teacherName + roomName + time + day + " po listi: "  + term.getAdditionalProperties().get("Nastavnik") + term.getRoom().getName() + term.getTime().toString() +  term.getDay().getName());
+//            if(term.getAdditionalProperties().get("Nastavnik").equals(teacherName) && term.getRoom().getName().equals(roomName) && term.getTime().toString().equals(time) &&
+//            term.getDay().getName().equals(day)){
+//                termList.remove(term);
+//                break;
+//            }
+//        }
     }
 
     @Override
