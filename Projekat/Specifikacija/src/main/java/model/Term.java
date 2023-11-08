@@ -118,13 +118,14 @@ public class Term implements ITermManager {
 
     @Override
     public Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String periodInput) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         Day day = new Day(dayInput);
         String[] parts = timeInput.split("-");
         LocalTime startTime = parseTime(parts[0].trim());
         LocalTime endTime = parseTime(parts[1].trim());
         String[] periodParts = periodInput.split("-");
-        LocalDate startPeriod = LocalDate.parse(periodParts[0].trim());
-        LocalDate endPeriod = LocalDate.parse(periodParts[1].trim());
+        LocalDate startPeriod = LocalDate.parse(periodParts[0].trim(), dateFormatter);
+        LocalDate endPeriod = LocalDate.parse(periodParts[1].trim(), dateFormatter);
         Period period = new Period(startPeriod,endPeriod);
         Time time = new Time(startTime, endTime);
         Room room = new Room(roomInput);
