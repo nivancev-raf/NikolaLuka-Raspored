@@ -4,6 +4,7 @@ import api.ITermManager;
 import handlers.SearchHandler;
 import handlers.TermHandler;
 import io.CSVFileImporter;
+import io.JsonFileImporter;
 import model.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ public class CommandLineInterface {
     private SearchCriteria searchCriteria;
     private SearchHandler searchHandler;
     private TermHandler termHandler;
+    private JsonFileImporter jsonFileImporter;
+    private CSVFileImporter csvFileImporter;
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
         this.termManager = new Term(schedule);
@@ -25,33 +28,44 @@ public class CommandLineInterface {
         this.termHandler = new TermHandler(schedule, termManager);
     }
 
-    public void run() {
-        CSVFileImporter csvFileImporter = new CSVFileImporter();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Unesite putanju do fajla: (/raspored.csv)");
-        //String filePath = scanner.nextLine();
-        String filePath = "/raspored.csv"; // vratiti scanner kasnije
-        try {
-            csvFileImporter.importFile(filePath);
-            System.out.println("Uspesno ucitan fajl: " + filePath);
+    private String fileTypePath(String s, Scanner scanner){
+        if (s.equalsIgnoreCase("JSON")){
+            jsonFileImporter = new JsonFileImporter();
+            System.out.println("Unesite putanju do fajla: (raspored.json)");
+            //String filePath = scanner.nextLine();
+            String filePath = "raspored.json"; // vratiti scanner kasnije
+            return filePath;
+        }else if (s.equalsIgnoreCase("CSV")){
+            csvFileImporter = new CSVFileImporter();
+            System.out.println("Unesite putanju do fajla: (/raspored.csv)");
+            //String filePath = scanner.nextLine();
+            String filePath = "/raspored.csv"; // vratiti scanner kasnije
+            return filePath;
+        }else{
+            System.out.println("Pogresan unos");
+            return null;
+        }
+    }
 
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Unesite tip fajla: (JSON ili CSV)");
+        String fileType = scanner.nextLine();
+        String filePath = fileTypePath(fileType, scanner);
+        if (filePath == null) return;
+
+        try {
+            if (filePath.contains(".json")) jsonFileImporter.importFile(filePath);
+            else if (filePath.contains(".csv")) csvFileImporter.importFile(filePath);
+            else {
+                System.out.println("FILE: Los unos putanje fajla ili nepostojeci fajl");
+                return;
+            }
+            System.out.println("Uspesno ucitan fajl: " + filePath);
         } catch (Exception e) {
-            System.out.println("FILE: Los unos putanje fajla ili nepostojeci fajl");
+            System.out.println(e);
             return;
         }
-//        System.out.println("Unesite period vazenja rasporeda u formatu: dd.MM.yyyy-dd.MM.yyyy   (primer: 01.01.2020-11.01.2020)");
-////        String periodVazenja = scanner.nextLine();
-//        String periodVazenja = "01.10.2020-11.10.2020"; // vratiti scanner kasnije
-//        try {
-//            schedule.setPeriodVazenja(periodVazenja);
-//            System.out.println("Raspored vazi: ");
-//            System.out.println( "od: " + schedule.getStartDate());
-//            System.out.println( "do: " + schedule.getEndDate());
-//        } catch (Exception e) {
-//            System.out.println("DATUM: Format datuma nije dobar");
-//            return;
-//        }
-
 
         while (true) {
             showMenu();

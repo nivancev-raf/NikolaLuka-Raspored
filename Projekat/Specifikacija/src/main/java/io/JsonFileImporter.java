@@ -11,7 +11,10 @@ import model.Time;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -56,7 +59,13 @@ public class JsonFileImporter extends FileImportExport {
         });
 
         Gson gson = builder.create();
-        JsonReader reader = new JsonReader(new FileReader(path));
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+        if (inputStream == null) {
+            throw new FileNotFoundException("File not found at path: " + path);
+        }
+        JsonReader reader = new JsonReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+
+
         Type scheduleEntryType = new TypeToken<List<ScheduleEntry>>(){}.getType();
         List<ScheduleEntry> scheduleEntries = gson.fromJson(reader, scheduleEntryType);
 
