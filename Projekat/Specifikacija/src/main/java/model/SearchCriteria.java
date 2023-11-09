@@ -15,6 +15,7 @@ public class SearchCriteria implements ISearchManager {
     private Date endTime;
     private Schedule schedule;
 
+
     public SearchCriteria(Schedule schedule) {
         this.schedule = schedule;
     }
@@ -51,6 +52,14 @@ public class SearchCriteria implements ISearchManager {
         this.endTime = endTime;
     }
 
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
     @Override
     public String toString() {
         return "SearchCriteria{" +
@@ -61,7 +70,8 @@ public class SearchCriteria implements ISearchManager {
                 '}';
     }
 
-    private List<Term> search(Map<String, String> criteria) {
+    @Override
+    public List<Term> search(Map<String, String> criteria) {
         List<Term> rezultati = new ArrayList<>();
         for (Term term : schedule.getTerms()) {
             boolean match = true;
@@ -82,7 +92,8 @@ public class SearchCriteria implements ISearchManager {
         return rezultati;
     }
 
-    private String getTermValue(Term term, String header) {
+    @Override
+    public String getTermValue(Term term, String header) {
         switch (header.toLowerCase()) {
             case "dan":
                 return term.getDay().getName().toLowerCase();
@@ -97,6 +108,7 @@ public class SearchCriteria implements ISearchManager {
     }
 
 
+    @Override
     public Map<String, List<LocalTime[]>> getFreeSlotsForTeacher(String teacherName, LocalTime workStart, LocalTime workEnd) {
         Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
         Map<String, List<LocalTime[]>> freeSlots = new HashMap<>();
@@ -147,6 +159,7 @@ public class SearchCriteria implements ISearchManager {
         return freeSlots;
     }
 
+    @Override
     public Map<String, List<LocalTime[]>> getOccupiedSlotsForTeacher(String teacherName) {
         Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
 
@@ -170,6 +183,7 @@ public class SearchCriteria implements ISearchManager {
         return occupiedSlots;
     }
 
+    @Override
     public Map<String, List<LocalTime[]>> getOccupiedSlotsForRoom(String roomName) {
         Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
 
@@ -186,6 +200,7 @@ public class SearchCriteria implements ISearchManager {
         return occupiedSlots;
     }
 
+    @Override
     public Map<String, List<LocalTime[]>> getFreeSlotsForRoom(String roomName, LocalTime workStart, LocalTime workEnd) {
         Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
 
@@ -251,18 +266,4 @@ public class SearchCriteria implements ISearchManager {
         return search(criteria);
     }
 
-    @Override
-    public void filterTermsByRoom(SearchCriteria roomName) {
-
-    }
-
-    @Override
-    public void filterTermsByDate(SearchCriteria date) {
-
-    }
-
-    @Override
-    public void filterTermsByTime(SearchCriteria startTime, SearchCriteria endTime) {
-
-    }
 }

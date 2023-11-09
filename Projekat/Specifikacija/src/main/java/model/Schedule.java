@@ -16,7 +16,6 @@ public class Schedule {
     private String periodKraj;
 
 
-    private CSVFileImporter csvFileImporter;
     private Schedule() {
         initSchedule();
     }

@@ -10,7 +10,7 @@ public class Main {
         ScheduleManager scheduleManager = new ScheduleManager();
         TermManager termManager = new TermManager(scheduleManager);
         RoomManager roomManager = new RoomManager(scheduleManager);
-        SearchManager searchManager = new SearchManager(scheduleManager);
+//        SearchManager searchManager = new SearchManager(scheduleManager);
 
 
 

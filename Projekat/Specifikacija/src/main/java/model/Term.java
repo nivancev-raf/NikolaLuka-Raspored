@@ -83,7 +83,13 @@ public class Term implements ITermManager {
                 '}';
     }
 
+    public Schedule getSchedule() {
+        return schedule;
+    }
 
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
 
     @Override
     public void deleteTerm(String teacherName, String roomName, String time, String day) {
