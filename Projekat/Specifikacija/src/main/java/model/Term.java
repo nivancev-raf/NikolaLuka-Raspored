@@ -13,7 +13,6 @@ public class Term implements ITermManager {
     private Room room;
     private Time time;
     private Period period;
-    private List<Term> termList = new ArrayList<>();
     private Map<String, String> additionalProperties;
     private Schedule schedule;
 
@@ -65,13 +64,6 @@ public class Term implements ITermManager {
         this.room = room;
     }
 
-    public List<Term> getTermList() {
-        return termList;
-    }
-
-    public void setTermList(List<Term> termList) {
-        this.termList = termList;
-    }
 
     public Period getPeriod() {
         return period;
@@ -91,31 +83,17 @@ public class Term implements ITermManager {
                 '}';
     }
 
-    @Override
-    public List<Term> getAllTerms() {
-        return this.termList;
-    }
 
-    @Override
-    public void updateTerm(Term termId, Term updatedTerm) {
-
-    }
 
     @Override
     public void deleteTerm(String teacherName, String roomName, String time, String day) {
-//        for(Term term: termList){
-//            System.out.println("Uneseno: " + teacherName + roomName + time + day + " po listi: "  + term.getAdditionalProperties().get("Nastavnik") + term.getRoom().getName() + term.getTime().toString() +  term.getDay().getName());
-//            if(term.getAdditionalProperties().get("Nastavnik").equals(teacherName) && term.getRoom().getName().equals(roomName) && term.getTime().toString().equals(time) &&
-//            term.getDay().getName().equals(day)){
-//                termList.remove(term);
-//                break;
-//            }
-//        }
-    }
-
-    @Override
-    public void addAdditionalProperty(String key, Object value) {
-
+        for(Term term: schedule.getTerms()){
+            if(term.getAdditionalProperties().get("Nastavnik").equals(teacherName) && term.getRoom().getName().equals(roomName) && term.getTime().toString().equals(time) &&
+                    term.getDay().getName().equals(day)){
+                schedule.getTerms().remove(term);
+                break;
+            }
+        }
     }
 
     @Override
@@ -184,6 +162,73 @@ public class Term implements ITermManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isTermAvailable(Term newTerm, List<Term> existingTerms) {
+        for (Term existingTerm : existingTerms) {
+            // Provera da li se vreme i učionica poklapaju
+            if (newTerm.getRoom().getName().equals(existingTerm.getRoom().getName()) &&
+                    newTerm.getTime().overlaps(existingTerm.getTime()) && newTerm.getDay().equals(existingTerm.getDay())) {
+                // Ako se vreme i učionica poklapaju, proveravamo da li se poklapaju i periodi
+                if (newTerm.getPeriod().overlaps(existingTerm.getPeriod())) {
+                    // Ako se i periodi poklapaju, termin nije dostupan
+                    return false;
+                }
+            }
+        }
+        // Ako nema poklapanja, termin je dostupan
+        return true;
+    }
+
+    @Override
+    public Term findTermToModify(String teacherName, String roomName, String timeRange) {
+        for(Term term: Schedule.getInstance().getTerms()){
+            System.out.println(term.getAdditionalProperty("Nastavnik") + " " + term.getRoom().getName() + " " + term.getTime().toString());
+            System.out.println(teacherName + " " + roomName + " " + timeRange);
+            if(term.getAdditionalProperty("Nastavnik").equals(teacherName) && term.getRoom().getName().equals(roomName)
+                    && term.getTime().toString().equals(timeRange)){
+                return term;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Term makeOriginalTerm(Term termToModify, LocalDate splitDateStr) {
+        Period period = new Period(termToModify.getPeriod().getStartPeriod(), splitDateStr);
+        Term originalTerm = new Term(termToModify.getRoom(), termToModify.getDay(), termToModify.getTime(), period);
+        originalTerm.setAdditionalProperties(termToModify.getAdditionalProperties());
+        return originalTerm;
+    }
+
+    @Override
+    public Term makeNewTerm(Term termToModify, LocalDate splitDate, Room newRoom, Time newTime) {
+        Term newTerm = new Term(newRoom, termToModify.getDay(), newTime,
+                new Period(splitDate.plusDays(1), termToModify.getPeriod().getEndPeriod()));
+        newTerm.setAdditionalProperties(termToModify.getAdditionalProperties());
+        return newTerm;
+    }
+
+    @Override
+    public Time splitTime(String timeRange) {
+        String[] timeParts = timeRange.split("-");
+        LocalTime newStartTime = LocalTime.parse(timeParts[0].trim(), DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime newEndTime = LocalTime.parse(timeParts[1].trim(), DateTimeFormatter.ofPattern("HH:mm"));
+        return new Time(newStartTime, newEndTime);
+    }
+
+    @Override
+    public void updateScheduleWithNewTerms(Term oldTerm, Term originalTerm, Term newTerm) {
+        List<Term> terms = schedule.getTerms();
+        terms.add(originalTerm);
+        terms.add(newTerm);
+        terms.remove(oldTerm);
+    }
+
+    @Override
+    public boolean isDateWithinTermPeriod(Term term, LocalDate date) {
+        return !(date.isBefore(term.getPeriod().getStartPeriod()) || date.isAfter(term.getPeriod().getEndPeriod()));
     }
 
 }

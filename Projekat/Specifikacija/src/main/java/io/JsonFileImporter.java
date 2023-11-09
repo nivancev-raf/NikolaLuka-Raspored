@@ -68,30 +68,21 @@ public class JsonFileImporter extends FileImportExport {
         }
         JsonReader reader = new JsonReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-
-//        Type scheduleEntryType = new TypeToken<List<ScheduleEntry>>(){}.getType();
-//        List<ScheduleEntry> scheduleEntries = gson.fromJson(reader, scheduleEntryType);
         Type termType = new TypeToken<List<Term>>(){}.getType();
         List<Term> termEntries = gson.fromJson(reader, termType);
+//        System.out.println("Term entries: " + termEntries);
+//        if (!termEntries.isEmpty()) {
+//            // Pretpostavimo da svi Term objekti imaju iste ključeve
+//            JsonObject exampleObject = (JsonObject) gson.toJsonTree(termEntries.get(0));
+//            int index = 0;
+//            for (Map.Entry<String, JsonElement> entry : exampleObject.entrySet()) {
+//                System.out.println("Header: " + entry.getKey());
+//                Schedule.getInstance().getHeaderIndexMap().put(entry.getKey(), index++);
+//            }
+//        }
+//        System.out.println("Header index map: " + Schedule.getInstance().getHeaderIndexMap());
+
         Schedule.getInstance().getTerms().addAll(termEntries);
 
-
-//        for (Term entry : termEntries) {
-//            System.out.println("Room: " + entry.getRoom()); // Assumes Room has a proper toString method
-//            System.out.println("Period: " + entry.getPeriod()); // Assumes Period has a proper toString method
-//            System.out.println("Time: " + entry.getTime()); // Assumes Time has a proper toString method
-//            System.out.println("Day: " + entry.getDay()); // Assumes Day has a proper toString method
-//
-//
-//
-//            // Print additional details
-//            for (Map.Entry<String, String> detail : entry.getAdditionalProperties().entrySet()) {
-//                System.out.println(detail.getKey() + ": " + detail.getValue());
-//            }
-//
-//            // Add a separator between entries for readability
-//            System.out.println("--------------------------------------------------");
-//        }
-//        System.out.println(Schedule.getInstance().getTerms());
     }
 }

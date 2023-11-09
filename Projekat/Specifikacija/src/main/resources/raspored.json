@@ -1,12 +1,12 @@
 [
   {
-    "Room": "RAF1",
-    "StartDate": "29.10.2023",
-    "EndDate": "30.11.2023",
-    "StartTime": "09:15",
-    "EndTime": "11:15",
+    "Room": "Rg07",
+    "StartDate": "01.10.2023",
+    "EndDate": "31.12.2023",
+    "StartTime": "13:15",
+    "EndTime": "15:00",
     "Subject": "UUP",
-    "Professor": "Mladen Jovanovic",
+    "Professor": "Brnabic Mateja",
     "Computer": "YES",
     "Day": "PON"
   }

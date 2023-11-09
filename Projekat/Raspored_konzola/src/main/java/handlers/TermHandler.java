@@ -82,21 +82,21 @@ public class TermHandler {
         }
     }
 
-//    public void deleteTerm(){
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Unesite dan:");
-//        String dayInput = scanner.nextLine().trim();
-//
-//        System.out.println("Unesite vreme (npr. 11:15-13):");
-//        String timeInput = scanner.nextLine().trim();
-//
-//        System.out.println("Unesite učionicu:");
-//        String roomInput = scanner.nextLine().trim();
-//
-//        System.out.println("Unesite nastavnika:");
-//        String teacherInput = scanner.nextLine().trim();
-//
-//        termManager.deleteTerm(teacherInput,roomInput,timeInput,dayInput);
-//
-//    }
+    public void deleteTerm(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Unesite dan:");
+        String dayInput = scanner.nextLine().trim();
+
+        System.out.println("Unesite vreme (npr. 11:15-13):");
+        String timeInput = scanner.nextLine().trim();
+
+        System.out.println("Unesite učionicu:");
+        String roomInput = scanner.nextLine().trim();
+
+        System.out.println("Unesite nastavnika:");
+        String teacherInput = scanner.nextLine().trim();
+
+        termManager.deleteTerm(teacherInput,roomInput,timeInput,dayInput);
+
+    }
 }
