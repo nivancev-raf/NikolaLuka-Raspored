@@ -134,12 +134,8 @@ public class SearchHandler {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Unesite naziv profesora: ");
             String teacherName = scanner.nextLine().trim();
-            System.out.println("Unesite početak radnog vremena (HH:MM):");
-            LocalTime workStart = LocalTime.parse(scanner.nextLine().trim());
-            System.out.println("Unesite kraj radnog vremena (HH:MM):");
-            LocalTime workEnd = LocalTime.parse(scanner.nextLine().trim());
 
-            Map<String, List<LocalTime[]>> occupiedSlots = searchCriteria.getOccupiedSlotsForTeacher(teacherName, workStart, workEnd);
+            Map<String, List<LocalTime[]>> occupiedSlots = searchCriteria.getOccupiedSlotsForTeacher(teacherName);
             // Sada ide ispis slobodnih slotova
             for (Map.Entry<String, List<LocalTime[]>> entry : occupiedSlots.entrySet()) {
                 String day = entry.getKey();
@@ -150,5 +146,43 @@ public class SearchHandler {
                 }
             }
         }
+
+    public void printFreeSlotsForRoomCLI() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Unesite naziv ucionice: ");
+        String roomName = scanner.nextLine().trim();
+        System.out.println("Unesite početak radnog vremena (HH:MM):");
+        LocalTime workStart = LocalTime.parse(scanner.nextLine().trim());
+        System.out.println("Unesite kraj radnog vremena (HH:MM):");
+        LocalTime workEnd = LocalTime.parse(scanner.nextLine().trim());
+
+        Map<String, List<LocalTime[]>> freeSlots = searchCriteria.getFreeSlotsForRoom(roomName, workStart, workEnd);
+        // Sada ide ispis slobodnih slotova
+        for (Map.Entry<String, List<LocalTime[]>> entry : freeSlots.entrySet()) {
+            String day = entry.getKey();
+            List<LocalTime[]> slots = entry.getValue();
+            System.out.println(day.toUpperCase() + ": slobodni termini za " + roomName + ":");
+            for (LocalTime[] times : slots) {
+                System.out.println(" - " + times[0] + " do " + times[1]);
+            }
+        }
     }
+
+    public void printfOccupiedSlotsForRoomCLI() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Unesite naziv ucionice: ");
+        String roomName = scanner.nextLine().trim();
+
+        Map<String, List<LocalTime[]>> occupiedSlots = searchCriteria.getOccupiedSlotsForRoom(roomName);
+        // Sada ide ispis slobodnih slotova
+        for (Map.Entry<String, List<LocalTime[]>> entry : occupiedSlots.entrySet()) {
+            String day = entry.getKey();
+            List<LocalTime[]> slots = entry.getValue();
+            System.out.println(day.toUpperCase() + ": zauzeti termini za " + roomName + ":");
+            for (LocalTime[] times : slots) {
+                System.out.println(" - " + times[0] + " do " + times[1]);
+            }
+        }
+    }
+}
 

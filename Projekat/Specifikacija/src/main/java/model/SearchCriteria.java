@@ -5,6 +5,7 @@ import api.ISearchManager;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class SearchCriteria implements ISearchManager {
@@ -146,7 +147,7 @@ public class SearchCriteria implements ISearchManager {
         return freeSlots;
     }
 
-    public Map<String, List<LocalTime[]>> getOccupiedSlotsForTeacher(String teacherName, LocalTime workStart, LocalTime workEnd) {
+    public Map<String, List<LocalTime[]>> getOccupiedSlotsForTeacher(String teacherName) {
         Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
 
         // Pronalaženje svih termina za nastavnika
@@ -167,6 +168,60 @@ public class SearchCriteria implements ISearchManager {
             }
         }
         return occupiedSlots;
+    }
+
+    public Map<String, List<LocalTime[]>> getOccupiedSlotsForRoom(String roomName) {
+        Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
+
+        // Pronalaženje svih termina za učionicu
+        for (Term term : schedule.getTerms()) {
+            if (term.getRoom().getName().equals(roomName)) {
+                String dayName = term.getDay().getName();
+                LocalTime startTime = term.getTime().getStartTime();
+                LocalTime endTime = term.getTime().getEndTime();
+                // Dodavanje zauzetog termina u mapu
+                occupiedSlots.computeIfAbsent(dayName, k -> new ArrayList<>()).add(new LocalTime[]{startTime, endTime});
+            }
+        }
+        return occupiedSlots;
+    }
+
+    public Map<String, List<LocalTime[]>> getFreeSlotsForRoom(String roomName, LocalTime workStart, LocalTime workEnd) {
+        Map<String, List<LocalTime[]>> occupiedSlots = new HashMap<>();
+
+        // Pronalaženje svih termina za učionicu
+        for (Term term : schedule.getTerms()) {
+            if (term.getRoom().getName().equals(roomName)) {
+                String dayName = term.getDay().getName();
+                LocalTime startTime = term.getTime().getStartTime();
+                LocalTime endTime = term.getTime().getEndTime();
+                // Dodavanje zauzetog termina u mapu
+                occupiedSlots.computeIfAbsent(dayName, k -> new ArrayList<>()).add(new LocalTime[]{startTime, endTime});
+            }
+        }
+
+        // Sada treba izračunati slobodne termine na osnovu zauzetih
+        Map<String, List<LocalTime[]>> freeSlots = new HashMap<>();
+
+        for (String day : occupiedSlots.keySet()) {
+            List<LocalTime[]> freeTimes = new ArrayList<>();
+            LocalTime current = workStart;
+
+            for (LocalTime[] occupied : occupiedSlots.get(day)) {
+                if (current.isBefore(occupied[0])) {
+                    freeTimes.add(new LocalTime[]{current, occupied[0]});
+                }
+                current = occupied[1];
+            }
+
+            if (current.isBefore(workEnd)) {
+                freeTimes.add(new LocalTime[]{current, workEnd});
+            }
+
+            freeSlots.put(day, freeTimes);
+        }
+
+        return freeSlots;
     }
 
     public String parseDay (LocalDate date){

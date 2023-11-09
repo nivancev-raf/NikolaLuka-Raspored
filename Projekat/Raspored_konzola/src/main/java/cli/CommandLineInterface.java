@@ -92,8 +92,10 @@ public class CommandLineInterface {
         System.out.println("3. Pretrazi Termine");
         System.out.println("4. Pretrazi Slobone Termine za Nastavnika");
         System.out.println("5. Izlistaj zauzete termine za Nastavnika");
-        System.out.println("6. Premestanje termina");
-        System.out.println("7. Stampanje celog rasporeda");
+        System.out.println("6. Pretrazi slobodne termine za ucionice");
+        System.out.println("7. Izlistaj zauzete termine za ucionice");
+        System.out.println("8. Premestanje termina");
+        System.out.println("9. Stampanje celog rasporeda");
 
     }
 
@@ -120,9 +122,15 @@ public class CommandLineInterface {
                 searchHandler.printOccupiedSlotsForTeacherCLI();
                 break;
             case "6":
-                moveTermHandler.editSchedule();
+                searchHandler.printFreeSlotsForRoomCLI();
                 break;
             case "7":
+                searchHandler.printfOccupiedSlotsForRoomCLI();
+                break;
+            case "8":
+                moveTermHandler.editSchedule();
+                break;
+            case "9":
                 // printaj ceo termin
                 printSchedule();
                 break;
@@ -143,6 +151,4 @@ public class CommandLineInterface {
             System.out.println("-----");
         }
     }
-
-
 }
