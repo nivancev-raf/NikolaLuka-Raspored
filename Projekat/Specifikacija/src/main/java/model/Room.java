@@ -10,12 +10,10 @@ import java.util.Map;
 public class Room implements IRoomManager {
     private String name;
     private int capacity;
-    private Map<String, Object> additionalProperties;
     private List<String> roomList;
 
     public Room(String name) {
         this.name = name;
-        this.additionalProperties = new HashMap<>();
         this.roomList = new ArrayList<>();
     }
 
@@ -35,20 +33,13 @@ public class Room implements IRoomManager {
         this.capacity = capacity;
     }
 
-    public Object getAdditionalProperty(String key) {
-        return additionalProperties.get(key);
+    public List<String> getRoomList() {
+        return roomList;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+    public void setRoomList(List<String> roomList) {
+        this.roomList = roomList;
     }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
-
-
-
 
     @Override
     public String toString() {
@@ -86,6 +77,7 @@ public class Room implements IRoomManager {
 
     @Override
     public void addAdditionalProperty(String key, Object value) {
-        this.additionalProperties.put(key, value);
+
     }
+
 }

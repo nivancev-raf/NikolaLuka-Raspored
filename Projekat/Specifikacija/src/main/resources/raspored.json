@@ -9,5 +9,16 @@
     "Professor": "Brnabic Mateja",
     "Computer": "YES",
     "Dan": "PON"
+  },
+  {
+    "Ucionica": "Rg05",
+    "StartDate": "15.10.2023",
+    "EndDate": "30.11.2023",
+    "StartTime": "10:00",
+    "EndTime": "12:00",
+    "Subject": "OOP",
+    "Professor": "Ivan Ivanovic",
+    "Computer": "NO",
+    "Dan": "UTO"
   }
 ]

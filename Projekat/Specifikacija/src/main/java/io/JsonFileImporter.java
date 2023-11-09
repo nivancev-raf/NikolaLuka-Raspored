@@ -29,6 +29,7 @@ public class JsonFileImporter extends FileImportExport {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                 JsonObject jsonObject = json.getAsJsonObject();
 
+
                 Day day = new Day(jsonObject.get("Dan").getAsString());
                 Room room = new Room(jsonObject.get("Ucionica").getAsString());
 

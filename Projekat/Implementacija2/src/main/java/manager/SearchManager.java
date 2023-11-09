@@ -4,16 +4,12 @@ import api.ISearchManager;
 import model.SearchCriteria;
 import model.Term;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
 public class SearchManager implements ISearchManager {
 
-    private ScheduleManager scheduleManager;
-
-    public SearchManager (ScheduleManager scheduleManager) {
-        this.scheduleManager = scheduleManager;
-    }
 
     @Override
     public List<Term> searchTermsByCriteria(Map<String, String> criteria) {
@@ -21,17 +17,32 @@ public class SearchManager implements ISearchManager {
     }
 
     @Override
-    public void filterTermsByRoom(SearchCriteria roomName) {
-
+    public List<Term> search(Map<String, String> criteria) {
+        return null;
     }
 
     @Override
-    public void filterTermsByDate(SearchCriteria date) {
-
+    public String getTermValue(Term term, String header) {
+        return null;
     }
 
     @Override
-    public void filterTermsByTime(SearchCriteria startTime, SearchCriteria endTime) {
+    public Map<String, List<LocalTime[]>> getFreeSlotsForTeacher(String teacherName, LocalTime workStart, LocalTime workEnd) {
+        return null;
+    }
 
+    @Override
+    public Map<String, List<LocalTime[]>> getOccupiedSlotsForTeacher(String teacherName) {
+        return null;
+    }
+
+    @Override
+    public Map<String, List<LocalTime[]>> getOccupiedSlotsForRoom(String roomName) {
+        return null;
+    }
+
+    @Override
+    public Map<String, List<LocalTime[]>> getFreeSlotsForRoom(String roomName, LocalTime workStart, LocalTime workEnd) {
+        return null;
     }
 }
