@@ -85,7 +85,7 @@ public class SearchCriteria implements ISearchManager {
         switch (header.toLowerCase()) {
             case "dan":
                 return term.getDay().getName().toLowerCase();
-            case "učionica":
+            case "ucionica":
                 return term.getRoom().getName().toLowerCase();
             case "termin":
                 return term.getTime().toString().toLowerCase();

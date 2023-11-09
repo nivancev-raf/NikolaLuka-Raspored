@@ -1,6 +1,6 @@
 [
   {
-    "Room": "Rg07",
+    "Ucionica": "Rg07",
     "StartDate": "01.10.2023",
     "EndDate": "31.12.2023",
     "StartTime": "13:15",
@@ -8,6 +8,6 @@
     "Subject": "UUP",
     "Professor": "Brnabic Mateja",
     "Computer": "YES",
-    "Day": "PON"
+    "Dan": "PON"
   }
 ]

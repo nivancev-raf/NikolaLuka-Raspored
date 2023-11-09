@@ -99,7 +99,6 @@ public class SearchHandler {
         }
 
 
-
         List<Term> results = searchCriteria.searchTermsByCriteria(criteria);
         if (results.isEmpty()) {
             System.out.println("Nema rezultata za zadate kriterijume.");
