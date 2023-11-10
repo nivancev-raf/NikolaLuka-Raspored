@@ -13,10 +13,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class CSVFileImporter extends FileImportExport {
 // CSV MANDATORY: Dan, Ucionica, Termin, Period
     private Map<String, Integer> headerIndexMap = Schedule.getInstance().getHeaderIndexMap();
+
     @Override
     public void importFile(String path) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -33,6 +35,7 @@ public class CSVFileImporter extends FileImportExport {
                     String[] values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                     String dayValue = values[headerIndexMap.get("Dan")].trim().replaceAll("^\"|\"$", "");
                     String roomValue = values[headerIndexMap.get("Učionica")].trim().replaceAll("^\"|\"$", "");
+
                     String timeValue = values[headerIndexMap.get("Termin")].trim().replaceAll("^\"|\"$", "");
                     String periodValue = values[headerIndexMap.get("Period")].trim().replaceAll("^\"|\"$", "");
 
@@ -46,6 +49,9 @@ public class CSVFileImporter extends FileImportExport {
 
                     Day day = new Day(dayValue);
                     Room room = new Room(roomValue);
+                    if (!Schedule.getInstance().getRoomList().contains(roomValue)){
+                        Schedule.getInstance().getRoomList().add(room);
+                    }
                     Time time = new Time(startTime, endTime);
                     Period period = new Period(startPeriod, endPeriod);
                     Term term = new Term(room, day, time, period);

@@ -6,11 +6,9 @@ import handlers.SearchHandler;
 import handlers.TermHandler;
 import io.CSVFileImporter;
 import io.JsonFileImporter;
+import io.RoomFileLoader;
 import model.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class CommandLineInterface {
@@ -22,6 +20,7 @@ public class CommandLineInterface {
     private MoveTermHandler moveTermHandler;
     private JsonFileImporter jsonFileImporter;
     private CSVFileImporter csvFileImporter;
+    private RoomFileLoader roomFileLoader;
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
         this.termManager = new Term(schedule);
@@ -44,7 +43,8 @@ public class CommandLineInterface {
             //String filePath = scanner.nextLine();
             String filePath = "/raspored.csv"; // vratiti scanner kasnije
             return filePath;
-        }else{
+        }
+        else{
             System.out.println("Pogresan unos");
             return null;
         }
@@ -65,6 +65,16 @@ public class CommandLineInterface {
                 return;
             }
             System.out.println("Uspesno ucitan fajl: " + filePath);
+        } catch (Exception e) {
+            System.out.println(e);
+            return;
+        }
+
+        // try cactch za txt
+        try {
+            roomFileLoader = new RoomFileLoader();
+            roomFileLoader.importFile("/room.txt");
+            System.out.println("Uspesno ucitan txt fajl: " + "/room.txt");
         } catch (Exception e) {
             System.out.println(e);
             return;
@@ -143,6 +153,7 @@ public class CommandLineInterface {
         for (Term term : Schedule.getInstance().getTerms()) {
             System.out.println("Day: " + term.getDay().getName());
             System.out.println("Room: " + term.getRoom().getName());
+            System.out.println("Capacity" + term.getRoom().getCapacity());
             System.out.println("Start Time: " + term.getTime().getStartTime());
             System.out.println("End Time: " + term.getTime().getEndTime());
             System.out.println("Additional Data: " + term.getAdditionalProperties());

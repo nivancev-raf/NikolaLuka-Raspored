@@ -83,7 +83,7 @@ public class Term implements ITermManager {
     public String toString() {
         return "Term{" +
                 "day=" + day +
-                ", room=" + room +
+                ", room=" + room + ", kapacitet=" + room.getCapacity() +
                 ", time=" + time +
                 ", additionalProperties=" + additionalProperties + ",period=" + period +
                 '}';
