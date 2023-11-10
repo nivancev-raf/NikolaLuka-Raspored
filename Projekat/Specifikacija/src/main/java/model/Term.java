@@ -68,6 +68,12 @@ public class Term implements ITermManager {
     public Period getPeriod() {
         return period;
     }
+    public String getPeriodString() {
+
+        String periodString = LocalDate.parse(period.getStartPeriod().toString()).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "-"
+                + LocalDate.parse(period.getEndPeriod().toString()).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        return periodString;
+    }
 
     public void setPeriod(Period period) {
         this.period = period;

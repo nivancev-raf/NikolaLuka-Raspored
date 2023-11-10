@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JsonFileImporter extends FileImportExport {
+// JSON MANDATORY: Ucionica, PocetniDatum, KrajnjiDatum, PocetnoVreme, KrajnjeVreme, Dan
 
     @Override
     public void importFile(String path) throws FileNotFoundException {
@@ -29,25 +30,31 @@ public class JsonFileImporter extends FileImportExport {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                 JsonObject jsonObject = json.getAsJsonObject();
 
-
+                // mandatory
                 Day day = new Day(jsonObject.get("Dan").getAsString());
                 Room room = new Room(jsonObject.get("Ucionica").getAsString());
 
-                LocalDate startDate = LocalDate.parse(jsonObject.get("StartDate").getAsString(), dateFormatter);
-                Schedule.getInstance().setPeriodPocetak(jsonObject.get("StartDate").getAsString());
-                LocalDate endDate = LocalDate.parse(jsonObject.get("EndDate").getAsString(), dateFormatter);
-                Schedule.getInstance().setPeriodKraj(jsonObject.get("EndDate").getAsString());
+                String periodStr = jsonObject.get("Period").getAsString();
+                String[] dateParts = periodStr.split("-");
+                LocalDate startDate = LocalDate.parse(dateParts[0].trim(), dateFormatter);
+                Schedule.getInstance().setPeriodPocetak(dateParts[0].trim());
+                LocalDate endDate = LocalDate.parse(dateParts[1].trim(), dateFormatter);
+                Schedule.getInstance().setPeriodPocetak(dateParts[1].trim());
                 Period period = new Period(startDate, endDate);
 
-                LocalTime startTime = LocalTime.parse(jsonObject.get("StartTime").getAsString());
-                LocalTime endTime = LocalTime.parse(jsonObject.get("EndTime").getAsString());
+
+                String timeStr = jsonObject.get("Termin").getAsString();
+                String[] timeParts = timeStr.split("-");
+                LocalTime startTime = LocalTime.parse(timeParts[0].trim());
+                LocalTime endTime = LocalTime.parse(timeParts[1].trim());
+
                 Time time = new Time(startTime, endTime);
 
                 Term term = new Term(room, day, time, period);
 
                 for (Map.Entry<String, JsonElement> entrySet : jsonObject.entrySet()) {
                     String key = entrySet.getKey();
-                    if (!key.equals("Ucionica") && !key.equals("StartDate") && !key.equals("EndDate") && !key.equals("StartTime") && !key.equals("EndTime") && !key.equals("Dan")) {
+                    if (!key.equals("Ucionica") && !key.equals("Termin") && !key.equals("Period") && !key.equals("Dan")) {
                         term.getAdditionalProperties().put(key, entrySet.getValue().getAsString());
                     }
                 }

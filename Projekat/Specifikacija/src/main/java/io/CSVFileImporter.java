@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CSVFileImporter extends FileImportExport {
-
+// CSV MANDATORY: Dan, Ucionica, Termin, Period
     private Map<String, Integer> headerIndexMap = Schedule.getInstance().getHeaderIndexMap();
     @Override
     public void importFile(String path) {
