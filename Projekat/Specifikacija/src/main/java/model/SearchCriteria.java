@@ -79,7 +79,7 @@ public class SearchCriteria implements ISearchManager {
                 String header = entry.getKey();
                 String value = entry.getValue().toLowerCase();
                 String termValue = getTermValue(term, header);
-
+                System.out.println("header: " + header + " value: " + value + " termValue: " + termValue);
                 if (termValue == null || !termValue.contains(value)) {
                     match = false;
                     break;
@@ -94,13 +94,19 @@ public class SearchCriteria implements ISearchManager {
 
     @Override
     public String getTermValue(Term term, String header) {
+        // JSON MANDATORY: Dan, Ucionica, Termin, Period
+        // CSV MANDATORY: Dan, Ucionica, Termin, Period
         switch (header.toLowerCase()) {
             case "dan":
                 return term.getDay().getName().toLowerCase();
             case "ucionica":
                 return term.getRoom().getName().toLowerCase();
+                //csv
             case "termin":
                 return term.getTime().toString().toLowerCase();
+            case "period":
+                return term.getPeriodString().toLowerCase();
+
             default:
                 Object additionalProperty = term.getAdditionalProperty(header);
                 return additionalProperty != null ? additionalProperty.toString().toLowerCase() : null;
