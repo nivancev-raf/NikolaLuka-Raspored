@@ -47,6 +47,12 @@ public class SearchHandler {
         LocalDate date;
         try {
             date = LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            for (LocalDate t : schedule.getIzuzetiDani()){
+                if (date.isEqual(t)){
+                    System.out.println("Termin je izuzetog dana, ne moze se pretraziti");
+                    return;
+                }
+            }
         } catch (DateTimeParseException e) {
             System.out.println("Neispravan format datuma. Pokušajte ponovo.");
             return;

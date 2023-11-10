@@ -5,6 +5,7 @@ import api.ITermManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Term implements ITermManager {
@@ -83,7 +84,7 @@ public class Term implements ITermManager {
     public String toString() {
         return "Term{" +
                 "day=" + day +
-                ", room=" + room + ", kapacitet=" + room.getCapacity() +
+                ", room=" + room + ", kapacitet=" + room.getCapacity() + ", room additional properties=" + room.getAdditional() +
                 ", time=" + time +
                 ", additionalProperties=" + additionalProperties + ",period=" + period +
                 '}';
@@ -196,8 +197,6 @@ public class Term implements ITermManager {
     @Override
     public Term findTermToModify(String teacherName, String roomName, String timeRange) {
         for(Term term: Schedule.getInstance().getTerms()){
-            System.out.println(term.getAdditionalProperty("Nastavnik") + " " + term.getRoom().getName() + " " + term.getTime().toString());
-            System.out.println(teacherName + " " + roomName + " " + timeRange);
             if(term.getAdditionalProperty("Nastavnik").equals(teacherName) && term.getRoom().getName().equals(roomName)
                     && term.getTime().toString().equals(timeRange)){
                 return term;
@@ -219,6 +218,14 @@ public class Term implements ITermManager {
         Term newTerm = new Term(newRoom, termToModify.getDay(), newTime,
                 new Period(splitDate.plusDays(1), termToModify.getPeriod().getEndPeriod()));
         newTerm.setAdditionalProperties(termToModify.getAdditionalProperties());
+        for (Term term : Schedule.getInstance().getTerms()) {
+            if (term.getRoom().getName().equalsIgnoreCase(newRoom.getName())) {
+                newRoom.setCapacity(term.getRoom().getCapacity());
+                newRoom.setAdditional(term.getRoom().getAdditional());
+                break;
+            }
+        }
+
         return newTerm;
     }
 
@@ -243,13 +250,18 @@ public class Term implements ITermManager {
         return !(date.isBefore(term.getPeriod().getStartPeriod()) || date.isAfter(term.getPeriod().getEndPeriod()));
     }
     @Override
-    public void parseIzuzetiDani(String datum){
+    public boolean parseIzuzetiDani(String datum) throws DateTimeParseException {
+        if (!datum.matches("\\d{2}.\\d{2}.\\d{4}")) {
+            return false;
+        }
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate startPeriod = LocalDate.parse(schedule.getPeriodPocetak().trim(), dateFormatter);
         LocalDate endPeriod = LocalDate.parse(schedule.getPeriodKraj().trim(), dateFormatter);
         LocalDate date =  LocalDate.parse(datum,dateFormatter);
         if(date.isAfter(startPeriod) && date.isBefore(endPeriod)){
             Schedule.getInstance().getIzuzetiDani().add(date);
+            return true;
         }
+        return false;
     }
 }

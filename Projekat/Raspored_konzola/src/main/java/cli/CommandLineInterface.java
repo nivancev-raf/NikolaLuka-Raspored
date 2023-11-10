@@ -85,11 +85,14 @@ public class CommandLineInterface {
         System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
         while(true){
             String command = scanner.nextLine();
-            if(command.equalsIgnoreCase("kraj")){
-                break;
-            }
-            termManager.parseIzuzetiDani(command);
-            System.out.println("Da li zelite da dodate jos datuma? Unesite 'kraj' za prekid");
+            if(command.equalsIgnoreCase("kraj")) break;
+
+            if (termManager.parseIzuzetiDani(command)) System.out.println("Uspesno dodat izuzet dan: " + command);
+            else System.out.println("Neuspesno dodat izuzet dan (nije u opsegu ili nije dobar format): " + command);
+
+            if (Schedule.getInstance().getIzuzetiDani().isEmpty()) System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
+            else System.out.println("Da li zelite da dodate jos datuma? Unesite 'kraj' za prekid");
+
         }
 
 
@@ -158,8 +161,7 @@ public class CommandLineInterface {
                 printSchedule();
                 break;
             case "10":
-                System.out.println(Schedule.getInstance().getIzuzetiDani());
-                System.out.println(Schedule.getInstance().getIzuzetiDani().size());
+                System.out.println("Lista Izuzetih dana: " + Schedule.getInstance().getIzuzetiDani());
                 break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchCriteria implements ISearchManager {
     private String roomName;
@@ -79,7 +80,6 @@ public class SearchCriteria implements ISearchManager {
                 String header = entry.getKey();
                 String value = entry.getValue().toLowerCase();
                 String termValue = getTermValue(term, header);
-                System.out.println("header: " + header + " value: " + value + " termValue: " + termValue);
                 if (termValue == null || !termValue.contains(value)) {
                     match = false;
                     break;
@@ -112,7 +112,6 @@ public class SearchCriteria implements ISearchManager {
                 return additionalProperty != null ? additionalProperty.toString().toLowerCase() : null;
         }
     }
-
 
     @Override
     public Map<String, List<LocalTime[]>> getFreeSlotsForTeacher(String teacherName, LocalTime workStart, LocalTime workEnd) {
@@ -148,10 +147,19 @@ public class SearchCriteria implements ISearchManager {
 
             for (LocalTime[] times : busyTimes) {
                 if (current.isBefore(times[0])) {
-                    // Dodavanje slobodnog termina u listu
-                    dayFreeSlots.add(new LocalTime[]{current, times[0]});
+                    // Provera da li je kraj slobodnog termina pre kraja radnog vremena
+                    LocalTime endOfFreeSlot = times[0].isBefore(workEnd) ? times[0] : workEnd;
+                    // Dodavanje slobodnog termina samo ako početak nije posle kraja radnog vremena
+                    if (!current.isAfter(workEnd)) {
+                        dayFreeSlots.add(new LocalTime[]{current, endOfFreeSlot});
+                    }
                 }
+                // Postavljanje trenutnog vremena na kraj zauzetog termina, ali ne posle kraja radnog vremena
                 current = times[1].isAfter(current) ? times[1] : current;
+                if (current.isAfter(workEnd)) {
+                    // Ako je trenutno vreme posle kraja radnog vremena, prekidamo dalje dodavanje
+                    break;
+                }
             }
 
             // Provera posle poslednjeg zauzetog termina
@@ -159,11 +167,18 @@ public class SearchCriteria implements ISearchManager {
                 dayFreeSlots.add(new LocalTime[]{current, workEnd});
             }
 
-            freeSlots.put(day, dayFreeSlots);
+            // Filtriranje slobodnih termina gde je početak jednak kraju
+            List<LocalTime[]> filteredDayFreeSlots = dayFreeSlots.stream()
+                    .filter(slot -> !slot[0].equals(slot[1]))
+                    .collect(Collectors.toList());
+
+            freeSlots.put(day, filteredDayFreeSlots);
         }
 
         return freeSlots;
+
     }
+
 
     @Override
     public Map<String, List<LocalTime[]>> getOccupiedSlotsForTeacher(String teacherName) {
@@ -195,7 +210,8 @@ public class SearchCriteria implements ISearchManager {
 
         // Pronalaženje svih termina za učionicu
         for (Term term : schedule.getTerms()) {
-            if (term.getRoom().getName().equals(roomName)) {
+            String ucionica = term.getRoom().getName().split(" ")[0];
+            if (ucionica.equalsIgnoreCase(roomName)) {
                 String dayName = term.getDay().getName();
                 LocalTime startTime = term.getTime().getStartTime();
                 LocalTime endTime = term.getTime().getEndTime();
@@ -212,7 +228,8 @@ public class SearchCriteria implements ISearchManager {
 
         // Pronalaženje svih termina za učionicu
         for (Term term : schedule.getTerms()) {
-            if (term.getRoom().getName().equals(roomName)) {
+            String ucionica = term.getRoom().getName().split(" ")[0];
+            if (ucionica.equalsIgnoreCase(roomName)) {
                 String dayName = term.getDay().getName();
                 LocalTime startTime = term.getTime().getStartTime();
                 LocalTime endTime = term.getTime().getEndTime();
@@ -225,25 +242,49 @@ public class SearchCriteria implements ISearchManager {
         Map<String, List<LocalTime[]>> freeSlots = new HashMap<>();
 
         for (String day : occupiedSlots.keySet()) {
-            List<LocalTime[]> freeTimes = new ArrayList<>();
+            List<LocalTime[]> busyTimes = occupiedSlots.get(day);
+            // Sortiranje zauzetih termina po početnom vremenu
+            busyTimes.sort(Comparator.comparing(o -> o[0]));
+
+            List<LocalTime[]> dayFreeSlots = new ArrayList<>();
             LocalTime current = workStart;
 
-            for (LocalTime[] occupied : occupiedSlots.get(day)) {
-                if (current.isBefore(occupied[0])) {
-                    freeTimes.add(new LocalTime[]{current, occupied[0]});
+            for (LocalTime[] times : busyTimes) {
+                if (current.isBefore(times[0])) {
+                    LocalTime startOfFreeSlot = current;
+                    LocalTime endOfFreeSlot = times[0];
+                    // Provera da li kraj slobodnog termina pada unutar radnog vremena
+                    if (endOfFreeSlot.isAfter(workEnd)) {
+                        endOfFreeSlot = workEnd;
+                    }
+                    // Dodavanje slobodnog termina ako početak nije posle kraja radnog vremena
+                    if (!startOfFreeSlot.isAfter(workEnd)) {
+                        dayFreeSlots.add(new LocalTime[]{startOfFreeSlot, endOfFreeSlot});
+                    }
                 }
-                current = occupied[1];
+                current = times[1];
+                // Ako trenutno vreme prelazi radno vreme, prekida se dalje dodavanje
+                if (current.isAfter(workEnd)) {
+                    break;
+                }
             }
 
+            // Dodavanje slobodnog termina nakon poslednjeg zauzetog termina, ako postoji
             if (current.isBefore(workEnd)) {
-                freeTimes.add(new LocalTime[]{current, workEnd});
+                dayFreeSlots.add(new LocalTime[]{current, workEnd});
             }
 
-            freeSlots.put(day, freeTimes);
+            // Filtriranje slobodnih termina gde je početak jednak kraju
+            List<LocalTime[]> filteredDayFreeSlots = dayFreeSlots.stream()
+                    .filter(slot -> !slot[0].equals(slot[1]))
+                    .collect(Collectors.toList());
+
+            freeSlots.put(day, filteredDayFreeSlots);
         }
 
         return freeSlots;
     }
+
 
     public String parseDay (LocalDate date){
         String dan = "";

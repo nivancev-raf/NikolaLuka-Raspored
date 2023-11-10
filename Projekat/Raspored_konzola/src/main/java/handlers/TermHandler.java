@@ -29,7 +29,7 @@ public class TermHandler {
         System.out.println("Unesite učionicu:");
         String roomInput = scanner.nextLine().trim();
 
-        System.out.println("Unesite period:");
+        System.out.println("Unesite period: (format: dd.MM.yyyy-dd.MM.yyyy )");
         String periodInput = scanner.nextLine().trim();
 
 
