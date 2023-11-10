@@ -96,7 +96,6 @@ public class CommandLineInterface {
         System.out.println("7. Izlistaj zauzete termine za ucionice");
         System.out.println("8. Premestanje termina");
         System.out.println("9. Stampanje celog rasporeda");
-
     }
 
     private void executeCommand(String command) {
