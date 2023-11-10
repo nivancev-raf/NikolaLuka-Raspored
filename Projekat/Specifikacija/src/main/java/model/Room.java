@@ -2,10 +2,7 @@ package model;
 
 import api.IRoomManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Room implements IRoomManager {
     private String name;
@@ -39,6 +36,19 @@ public class Room implements IRoomManager {
 
     public void setRoomList(List<String> roomList) {
         this.roomList = roomList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return Objects.equals(name, room.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override
