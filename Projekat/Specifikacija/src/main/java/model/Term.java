@@ -242,5 +242,14 @@ public class Term implements ITermManager {
     public boolean isDateWithinTermPeriod(Term term, LocalDate date) {
         return !(date.isBefore(term.getPeriod().getStartPeriod()) || date.isAfter(term.getPeriod().getEndPeriod()));
     }
-
+    @Override
+    public void parseIzuzetiDani(String datum){
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate startPeriod = LocalDate.parse(schedule.getPeriodPocetak().trim(), dateFormatter);
+        LocalDate endPeriod = LocalDate.parse(schedule.getPeriodKraj().trim(), dateFormatter);
+        LocalDate date =  LocalDate.parse(datum,dateFormatter);
+        if(date.isAfter(startPeriod) && date.isBefore(endPeriod)){
+            Schedule.getInstance().getIzuzetiDani().add(date);
+        }
+    }
 }

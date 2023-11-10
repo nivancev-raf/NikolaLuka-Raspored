@@ -9,9 +9,12 @@ public class Room implements IRoomManager {
     private int capacity;
     private List<String> roomList;
 
+    private Map<String,String> additional;
+
     public Room(String name) {
         this.name = name;
         this.roomList = new ArrayList<>();
+        this.additional = new HashMap<>();
     }
 
     public String getName() {
@@ -36,6 +39,14 @@ public class Room implements IRoomManager {
 
     public void setRoomList(List<String> roomList) {
         this.roomList = roomList;
+    }
+
+    public Map<String, String> getAdditional() {
+        return additional;
+    }
+
+    public void setAdditional(Map<String, String> additional) {
+        this.additional = additional;
     }
 
     @Override

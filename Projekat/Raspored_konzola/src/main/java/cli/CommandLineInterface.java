@@ -9,6 +9,8 @@ import io.JsonFileImporter;
 import io.RoomFileLoader;
 import model.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class CommandLineInterface {
@@ -80,6 +82,17 @@ public class CommandLineInterface {
             return;
         }
 
+        System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
+        while(true){
+            String command = scanner.nextLine();
+            if(command.equalsIgnoreCase("kraj")){
+                break;
+            }
+            termManager.parseIzuzetiDani(command);
+            System.out.println("Da li zelite da dodate jos datuma? Unesite 'kraj' za prekid");
+        }
+
+
         while (true) {
             showMenu();
             System.out.println("Izaberite opciju (ili 'exit' za izlaz):");
@@ -106,6 +119,7 @@ public class CommandLineInterface {
         System.out.println("7. Izlistaj zauzete termine za ucionice");
         System.out.println("8. Premestanje termina");
         System.out.println("9. Stampanje celog rasporeda");
+        System.out.println("10. Stampaj izuzete dane");
     }
 
     private void executeCommand(String command) {
@@ -143,6 +157,10 @@ public class CommandLineInterface {
                 // printaj ceo termin
                 printSchedule();
                 break;
+            case "10":
+                System.out.println(Schedule.getInstance().getIzuzetiDani());
+                System.out.println(Schedule.getInstance().getIzuzetiDani().size());
+                break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
                 break;
@@ -153,7 +171,8 @@ public class CommandLineInterface {
         for (Term term : Schedule.getInstance().getTerms()) {
             System.out.println("Day: " + term.getDay().getName());
             System.out.println("Room: " + term.getRoom().getName());
-            System.out.println("Capacity" + term.getRoom().getCapacity());
+            System.out.println("Capacity: " + term.getRoom().getCapacity());
+            System.out.println("Additional: " + term.getRoom().getAdditional());
             System.out.println("Start Time: " + term.getTime().getStartTime());
             System.out.println("End Time: " + term.getTime().getEndTime());
             System.out.println("Additional Data: " + term.getAdditionalProperties());

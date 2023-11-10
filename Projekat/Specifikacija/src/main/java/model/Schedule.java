@@ -1,6 +1,7 @@
 package model;
 import io.CSVFileImporter;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Schedule {
@@ -17,6 +18,7 @@ public class Schedule {
     private String periodPocetak;
     private String periodKraj;
 
+    private List<LocalDate> izuzetiDani;
 
     private Schedule() {
         initSchedule();
@@ -38,6 +40,7 @@ public class Schedule {
         this.additionalData = new HashMap<>();
         this.headerIndexMap = new HashMap<>();
         this.roomHeaderIndexMap = new HashMap<>();
+        this.izuzetiDani = new ArrayList<>();
     }
 
     public List<Term> getTerms() {
@@ -114,5 +117,12 @@ public class Schedule {
 
     public void setRoomList(List<Room> roomList) {
         this.roomList = roomList;
+    }
+
+    public List<LocalDate> getIzuzetiDani() {
+        return izuzetiDani;
+    }
+    public void setIzuzetiDani(List<LocalDate> izuzetiDani) {
+        this.izuzetiDani = izuzetiDani;
     }
 }
