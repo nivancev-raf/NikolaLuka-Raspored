@@ -7,6 +7,7 @@ import handlers.TermHandler;
 import io.CSVFileImporter;
 import io.JsonFileImporter;
 import io.RoomFileLoader;
+import nikolaluka.raspored.impl1.FileExporter;
 import model.*;
 
 import java.io.FileNotFoundException;
@@ -26,6 +27,8 @@ public class CommandLineInterface {
     private CSVFileImporter csvFileImporter;
     private RoomFileLoader roomFileLoader;
     private SpecFileExport fileExport;
+    private FileExporter fileExporter;
+
 
 
     public CommandLineInterface() {
@@ -174,7 +177,7 @@ public class CommandLineInterface {
                 System.out.println("Lista Izuzetih dana: " + Schedule.getInstance().getIzuzetiDani());
                 break;
             case "11":
-                exportFile("nista");
+                fileExport.exportFile("nista");
                 break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");

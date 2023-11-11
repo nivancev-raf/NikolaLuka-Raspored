@@ -1,2 +1,5 @@
+handlers\SearchHandler.class
 Main.class
-CommandLineInterface.class
+handlers\MoveTermHandler.class
+cli\CommandLineInterface.class
+handlers\TermHandler.class

@@ -1,3 +1,5 @@
+package nikolaluka.raspored.impl1;
+
 import api.SpecFileExport;
 import model.Schedule;
 import model.SearchCriteria;
@@ -7,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-public  class FileExporter extends SpecFileExport {
+public class FileExporter extends SpecFileExport {
 
     private SearchCriteria searchCriteria;
     private Schedule schedule;
