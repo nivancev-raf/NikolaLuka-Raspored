@@ -5,7 +5,6 @@ import api.ISearchManager;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -306,6 +305,25 @@ public class SearchCriteria implements ISearchManager {
             dan = "NED";
         }
         return dan;
+    }
+
+    public DayOfWeek reverseParseDay(String day){
+        if(day.equalsIgnoreCase("pon")){
+            return DayOfWeek.MONDAY;
+        } else if(day.equalsIgnoreCase("uto")){
+            return DayOfWeek.TUESDAY;
+        }else if(day.equalsIgnoreCase("sre")){
+            return DayOfWeek.WEDNESDAY;
+        } else if(day.equalsIgnoreCase("čet") || day.equalsIgnoreCase("cet")){
+            return DayOfWeek.THURSDAY;
+        } else if(day.equalsIgnoreCase("pet")){
+            return DayOfWeek.FRIDAY;
+        } else if(day.equalsIgnoreCase("sub")){
+            return DayOfWeek.SATURDAY;
+        }else if(day.equalsIgnoreCase("ned")){
+            return DayOfWeek.SUNDAY;
+        }
+        return null;
     }
 
     @Override

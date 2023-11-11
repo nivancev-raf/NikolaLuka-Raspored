@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class JsonFileImporter extends FileImportExport {
 // JSON MANDATORY: Ucionica, PocetniDatum, KrajnjiDatum, PocetnoVreme, KrajnjeVreme, Dan
 
+
     @Override
     public void importFile(String path) throws FileNotFoundException {
         GsonBuilder builder = new GsonBuilder();

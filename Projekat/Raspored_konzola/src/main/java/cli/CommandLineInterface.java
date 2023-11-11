@@ -1,6 +1,6 @@
 package cli;
-
 import api.ITermManager;
+import api.SpecFileExport;
 import handlers.MoveTermHandler;
 import handlers.SearchHandler;
 import handlers.TermHandler;
@@ -9,6 +9,8 @@ import io.JsonFileImporter;
 import io.RoomFileLoader;
 import model.*;
 
+import java.io.FileNotFoundException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -23,6 +25,9 @@ public class CommandLineInterface {
     private JsonFileImporter jsonFileImporter;
     private CSVFileImporter csvFileImporter;
     private RoomFileLoader roomFileLoader;
+    private SpecFileExport fileExport;
+
+
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
         this.termManager = new Term(schedule);
@@ -32,21 +37,20 @@ public class CommandLineInterface {
         this.moveTermHandler = new MoveTermHandler(schedule, termManager);
     }
 
-    private String fileTypePath(String s, Scanner scanner){
-        if (s.equalsIgnoreCase("JSON")){
+    private String fileTypePath(String s, Scanner scanner) {
+        if (s.equalsIgnoreCase("JSON")) {
             jsonFileImporter = new JsonFileImporter();
             System.out.println("Unesite putanju do fajla: (raspored.json)");
             //String filePath = scanner.nextLine();
             String filePath = "raspored.json"; // vratiti scanner kasnije
             return filePath;
-        }else if (s.equalsIgnoreCase("CSV")){
+        } else if (s.equalsIgnoreCase("CSV")) {
             csvFileImporter = new CSVFileImporter();
             System.out.println("Unesite putanju do fajla: (/raspored.csv)");
             //String filePath = scanner.nextLine();
             String filePath = "/raspored.csv"; // vratiti scanner kasnije
             return filePath;
-        }
-        else{
+        } else {
             System.out.println("Pogresan unos");
             return null;
         }
@@ -83,14 +87,15 @@ public class CommandLineInterface {
         }
 
         System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
-        while(true){
+        while (true) {
             String command = scanner.nextLine();
-            if(command.equalsIgnoreCase("kraj")) break;
+            if (command.equalsIgnoreCase("kraj")) break;
 
             if (termManager.parseIzuzetiDani(command)) System.out.println("Uspesno dodat izuzet dan: " + command);
             else System.out.println("Neuspesno dodat izuzet dan (nije u opsegu ili nije dobar format): " + command);
 
-            if (Schedule.getInstance().getIzuzetiDani().isEmpty()) System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
+            if (Schedule.getInstance().getIzuzetiDani().isEmpty())
+                System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
             else System.out.println("Da li zelite da dodate jos datuma? Unesite 'kraj' za prekid");
 
         }
@@ -103,7 +108,11 @@ public class CommandLineInterface {
             if ("exit".equals(command)) {
                 break;
             }
-            executeCommand(command);
+            try {
+                executeCommand(command);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -123,9 +132,10 @@ public class CommandLineInterface {
         System.out.println("8. Premestanje termina");
         System.out.println("9. Stampanje celog rasporeda");
         System.out.println("10. Stampaj izuzete dane");
+        System.out.println("11. Export fajla");
     }
 
-    private void executeCommand(String command) {
+    private void executeCommand(String command) throws FileNotFoundException {
         switch (command) {
             case "1":
                 // Logika za dodavanje termina
@@ -163,6 +173,9 @@ public class CommandLineInterface {
             case "10":
                 System.out.println("Lista Izuzetih dana: " + Schedule.getInstance().getIzuzetiDani());
                 break;
+            case "11":
+                exportFile("nista");
+                break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
                 break;
@@ -182,4 +195,41 @@ public class CommandLineInterface {
             System.out.println("-----");
         }
     }
+
+    public void exportFile(String path){
+        List<Term> terms = schedule.getTerms();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        //try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        // Pisanje zaglavlja u CSV fajl
+        //writer.write("Dan,Period,Termin,Ucionica\n");
+
+        // Pisanje svakog termina kao red u CSV fajlu
+        for (Term term : terms) {
+
+            DayOfWeek day = searchCriteria.reverseParseDay(term.getDay().getName());
+            LocalDate date = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(),dateFormatter);
+            LocalDate endDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(),dateFormatter);
+
+            while(date.isBefore(endDate) || date.isEqual(endDate)){
+                if(date.getDayOfWeek().equals(day)){
+                    System.out.println("Dan: " + day + ",datum: " + date + ",termin: " + term.getTime().getStartTime().toString() + "-" +  term.getTime().getEndTime().toString()
+                            + ",ucionica: " + term.getRoom().getName());
+                }
+                date = date.plusDays(1);
+            }
+
+//                writer.write(String.format("%s,%s,%s,%s,%s,%s\n",
+//                        term.getDay().getName(),
+//                        term.getRoom().getName(),
+//                        term.getTime().getStartTime().toString(),
+//                        term.getTime().getEndTime().toString(),
+//                        term.getSubject(),
+//                        term.getProfessor()
+//                ));
+        }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+    }
+
 }

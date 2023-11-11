@@ -77,11 +77,6 @@ public class CSVFileImporter extends FileImportExport {
         }
     }
 
-    @Override
-    public void exportFile(String path) {
-
-    }
-
     private LocalTime parseTime(String time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
         time = time.replaceAll("\"", "");

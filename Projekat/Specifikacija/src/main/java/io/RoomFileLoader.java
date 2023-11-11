@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 public class RoomFileLoader extends FileImportExport {
     private Map<String, Integer> roomHeaderIndexMap = Schedule.getInstance().getRoomHeaderIndexMap();
+
+
     @Override
     public void importFile(String path) throws FileNotFoundException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path), StandardCharsets.UTF_8)))  {
