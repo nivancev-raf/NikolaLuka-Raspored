@@ -26,7 +26,6 @@ public class CommandLineInterface {
     private JsonFileImporter jsonFileImporter;
     private CSVFileImporter csvFileImporter;
     private RoomFileLoader roomFileLoader;
-    private SpecFileExport fileExport;
     private FileExporter fileExporter;
 
 
@@ -177,7 +176,8 @@ public class CommandLineInterface {
                 System.out.println("Lista Izuzetih dana: " + Schedule.getInstance().getIzuzetiDani());
                 break;
             case "11":
-                fileExport.exportFile("nista");
+                fileExporter = new FileExporter(schedule);
+                fileExporter.exportFile("D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\test.csv");
                 break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
@@ -199,40 +199,5 @@ public class CommandLineInterface {
         }
     }
 
-    public void exportFile(String path){
-        List<Term> terms = schedule.getTerms();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        //try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-        // Pisanje zaglavlja u CSV fajl
-        //writer.write("Dan,Period,Termin,Ucionica\n");
-
-        // Pisanje svakog termina kao red u CSV fajlu
-        for (Term term : terms) {
-
-            DayOfWeek day = searchCriteria.reverseParseDay(term.getDay().getName());
-            LocalDate date = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(),dateFormatter);
-            LocalDate endDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(),dateFormatter);
-
-            while(date.isBefore(endDate) || date.isEqual(endDate)){
-                if(date.getDayOfWeek().equals(day)){
-                    System.out.println("Dan: " + day + ",datum: " + date + ",termin: " + term.getTime().getStartTime().toString() + "-" +  term.getTime().getEndTime().toString()
-                            + ",ucionica: " + term.getRoom().getName());
-                }
-                date = date.plusDays(1);
-            }
-
-//                writer.write(String.format("%s,%s,%s,%s,%s,%s\n",
-//                        term.getDay().getName(),
-//                        term.getRoom().getName(),
-//                        term.getTime().getStartTime().toString(),
-//                        term.getTime().getEndTime().toString(),
-//                        term.getSubject(),
-//                        term.getProfessor()
-//                ));
-        }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-    }
 
 }

@@ -40,7 +40,7 @@ public class JsonFileImporter extends FileImportExport {
                 LocalDate startDate = LocalDate.parse(dateParts[0].trim(), dateFormatter);
                 Schedule.getInstance().setPeriodPocetak(dateParts[0].trim());
                 LocalDate endDate = LocalDate.parse(dateParts[1].trim(), dateFormatter);
-                Schedule.getInstance().setPeriodPocetak(dateParts[1].trim());
+                Schedule.getInstance().setPeriodKraj(dateParts[1].trim());
                 Period period = new Period(startDate, endDate);
 
 
