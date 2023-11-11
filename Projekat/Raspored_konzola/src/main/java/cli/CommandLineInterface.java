@@ -9,11 +9,9 @@ import io.JsonFileImporter;
 import io.RoomFileLoader;
 import nikolaluka.raspored.impl1.FileExporter;
 import model.*;
+import nikolaluka.raspored.impl2.FileExporter2;
 
 import java.io.FileNotFoundException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class CommandLineInterface {
@@ -27,8 +25,7 @@ public class CommandLineInterface {
     private CSVFileImporter csvFileImporter;
     private RoomFileLoader roomFileLoader;
     private FileExporter fileExporter;
-
-
+    private FileExporter2 fileExporter2;
 
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
@@ -176,8 +173,6 @@ public class CommandLineInterface {
                 System.out.println("Lista Izuzetih dana: " + Schedule.getInstance().getIzuzetiDani());
                 break;
             case "11":
-//                fileExporter = new FileExporter(schedule);
-//                fileExporter.exportFile("D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\test.csv");
                 exportFileCLI();
                 break;
             default:
@@ -185,13 +180,24 @@ public class CommandLineInterface {
                 break;
         }
     }
+    private void exportFileCLI() throws FileNotFoundException {
+        System.out.println("U kom obliku zelite da eksportujete fajl: 1)Implementacija1 2)Implementacija2");
 
-    private void exportFileCLI(){
-        System.out.println("Unesite putanju gde hocete da sacuvate file: ");
         Scanner scanner = new Scanner(System.in);
-        String path = scanner.nextLine();
-        fileExporter = new FileExporter(schedule);
-        fileExporter.exportFile(path);
+        String answer = scanner.nextLine();
+
+        if(answer.equalsIgnoreCase("1")){
+            System.out.println("Unesite putanju gde hocete da sacuvate file: ");
+            String path = scanner.nextLine();
+            fileExporter = new FileExporter(schedule);
+            fileExporter.exportFile(path);
+        } else if(answer.equalsIgnoreCase("2")) {
+            System.out.println("Unesite putanju gde hocete da sacuvate file: ");
+            String path = scanner.nextLine();
+            fileExporter2 = new FileExporter2(schedule);
+            fileExporter2.exportFile(path);
+        }
+
     }
 
     public void printSchedule() {
