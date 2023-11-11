@@ -176,13 +176,22 @@ public class CommandLineInterface {
                 System.out.println("Lista Izuzetih dana: " + Schedule.getInstance().getIzuzetiDani());
                 break;
             case "11":
-                fileExporter = new FileExporter(schedule);
-                fileExporter.exportFile("D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\test.csv");
+//                fileExporter = new FileExporter(schedule);
+//                fileExporter.exportFile("D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\test.csv");
+                exportFileCLI();
                 break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
                 break;
         }
+    }
+
+    private void exportFileCLI(){
+        System.out.println("Unesite putanju gde hocete da sacuvate file: ");
+        Scanner scanner = new Scanner(System.in);
+        String path = scanner.nextLine();
+        fileExporter = new FileExporter(schedule);
+        fileExporter.exportFile(path);
     }
 
     public void printSchedule() {
