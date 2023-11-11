@@ -184,8 +184,8 @@ public class CommandLineInterface {
         System.out.println("U kom obliku zelite da eksportujete fajl: 1)Implementacija1 2)Implementacija2");
 
         Scanner scanner = new Scanner(System.in);
-        String answer = scanner.nextLine();
-
+//        String answer = scanner.nextLine();
+        String answer = "2";
         if(answer.equalsIgnoreCase("1")){
             System.out.println("Unesite putanju gde hocete da sacuvate file: ");
             String path = scanner.nextLine();
@@ -193,7 +193,8 @@ public class CommandLineInterface {
             fileExporter.exportFile(path);
         } else if(answer.equalsIgnoreCase("2")) {
             System.out.println("Unesite putanju gde hocete da sacuvate file: ");
-            String path = scanner.nextLine();
+//            String path = scanner.nextLine();
+            String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\ProjekatGit\\Projekat\\Specifikacija\\src\\main\\resources\\exportedFile.txt";
             fileExporter2 = new FileExporter2(schedule);
             fileExporter2.exportFile(path);
         }

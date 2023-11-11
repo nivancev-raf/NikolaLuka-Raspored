@@ -27,67 +27,29 @@ public class FileExporter2 extends SpecFileExport {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     @Override
     public void exportFile(String path) {
-        Set<DayOfWeek> daysInPeriod = new HashSet<>();
-        LocalDate currentStartDate = null;
-        LocalDate currentEndDate = null;
+        // Sortiranje izuzetih datuma
+        Schedule.getInstance().getIzuzetiDani().sort(Comparator.naturalOrder());
 
-        // Provera pojavljivanja dana u periodu
-        for (Term term : Schedule.getInstance().getTerms()) {
-            LocalDate startDate = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(), dateFormatter);
-            LocalDate endDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(), dateFormatter);
-            DayOfWeek dayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName());
+        // Sortiranje termina po početnom datumu perioda
+        Schedule.getInstance().getTerms().sort(Comparator.comparing(term -> LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(), dateFormatter)));
 
-            while (startDate.isBefore(endDate) || startDate.isEqual(endDate)) {
-                if (startDate.getDayOfWeek().equals(dayOfWeek)) {
-                    daysInPeriod.add(dayOfWeek);
-                    break;
-                }
-                startDate = startDate.plusDays(1);
-            }
-        }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-            for (Term term : Schedule.getInstance().getTerms()) {
-                LocalDate startDate = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(), dateFormatter);
-                LocalDate endDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(), dateFormatter);
-                DayOfWeek dayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName());
+            LocalDate startDate = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(), dateFormatter);
+            LocalDate endDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(), dateFormatter);
+            LocalDate currentStartDate = startDate;
+            LocalDate currentEndDate = endDate;
 
-                // Provera izuzetih dana
-                for (LocalDate excludedDate : Schedule.getInstance().getIzuzetiDani()) {
-                    if ((excludedDate.isAfter(startDate) || excludedDate.isEqual(startDate)) && excludedDate.isBefore(endDate)) {
-                        // Ako je došlo do promene perioda zbog izuzetog dana
-                        if (currentStartDate == null || currentEndDate == null || !startDate.isEqual(currentStartDate) || !excludedDate.minusDays(1).isEqual(currentEndDate)) {
-                            if (currentStartDate != null && currentEndDate != null) {
-                                // Zapisivanje prethodnog perioda
-                                writePeriod(writer, currentStartDate, currentEndDate);
-                            }
-                            // Ažuriranje trenutnog perioda
-                            currentStartDate = startDate;
-                            currentEndDate = excludedDate.minusDays(1);
-                        }
-                        // Ažuriranje početnog datuma za sledeći period
-                        startDate = excludedDate.plusDays(1);
-                    }
-                }
-
-                // Provera da li se dan pojavljuje u periodu
-                if (daysInPeriod.contains(dayOfWeek)) {
-                    // Ako je došlo do promene perioda
-                    if (currentStartDate == null || currentEndDate == null || !startDate.isEqual(currentStartDate) || !endDate.isEqual(currentEndDate)) {
-                        // Zapisivanje prethodnog perioda
-                        if (currentStartDate != null && currentEndDate != null) {
-                            writePeriod(writer, currentStartDate, currentEndDate);
-                        }
-                        // Ažuriranje trenutnog perioda
-                        currentStartDate = startDate;
-                        currentEndDate = endDate;
-                    }
+            for (LocalDate excludedDate : Schedule.getInstance().getIzuzetiDani()) {
+                if ((excludedDate.isAfter(startDate) || excludedDate.isEqual(startDate)) && excludedDate.isBefore(endDate)) {
+                    currentEndDate = excludedDate.minusDays(1);
+                    writePeriod(writer, currentStartDate, currentEndDate);
+                    currentStartDate = excludedDate.plusDays(1);
                 }
             }
-
-            // Zapisivanje poslednjeg perioda
-            if (currentStartDate != null && currentEndDate != null) {
-                writePeriod(writer, currentStartDate, currentEndDate);
+            // Pisanje za poslednji period ako postoji
+            if (!currentStartDate.isAfter(endDate)) {
+                writePeriod(writer, currentStartDate, endDate);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,17 +59,24 @@ public class FileExporter2 extends SpecFileExport {
     private void writePeriod(BufferedWriter writer, LocalDate start, LocalDate end) throws IOException {
         writer.write("PERIOD OD " + start.format(dateFormatter) + " - PERIOD DO " + end.format(dateFormatter) + "\n\n");
         for (Term term : Schedule.getInstance().getTerms()) {
-            if (termFallsInPeriod(term, start, end)) {
+            if (dayFallsInPeriod(term, start, end) && dayFallsInPeriod(term, start, end)) {
                 writer.write(term.getRoom().getName() + ", " + term.getDay().getName() + ", " + term.getAdditionalProperties().get("Predmet") + ", " + term.getTime().getStartTime() + "-" + term.getTime().getEndTime() + "\n");
             }
         }
         writer.write("\n");
     }
 
-    private boolean termFallsInPeriod(Term term, LocalDate start, LocalDate end) {
-        LocalDate termStartDate = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(), dateFormatter);
-        LocalDate termEndDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(), dateFormatter);
-        return !termStartDate.isAfter(end) && !termEndDate.isBefore(start);
+    private boolean dayFallsInPeriod(Term term, LocalDate start, LocalDate end) {
+        DayOfWeek dayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName());
+        LocalDate date = start;
+        while (date.isBefore(end.plusDays(1))) { // Uključuje i krajnji datum
+            if (date.getDayOfWeek() == dayOfWeek) {
+                return true;
+            }
+            date = date.plusDays(1);
+        }
+        return false;
     }
+
 
 }
