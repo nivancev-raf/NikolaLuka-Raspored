@@ -1,0 +1,11 @@
+Ucionica,Kapacitet,Racunar,Projektor
+Rg07 (u),25,DA,NE
+Raf04 (u),30,DA,DA
+Raf02 (u),30,DA,NE
+Raf21 (a),100,NE,DA
+Raf06 (a),30,DA,DA,
+Raf20 (a),100,NE,DA
+Kolarac2,50,NE,DA
+Raf05 (u),30,DA,NE
+Kolarac3,120,NE,DA
+Raf07 (u),45,DA,NE
