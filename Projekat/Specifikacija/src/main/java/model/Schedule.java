@@ -17,6 +17,8 @@ public class Schedule {
     private Map<String, Integer> roomHeaderIndexMap;
     private String periodPocetak;
     private String periodKraj;
+    private List<LocalDate> pocetni;
+    private List<LocalDate> krajnji;
 
     private List<LocalDate> izuzetiDani;
 
@@ -41,6 +43,8 @@ public class Schedule {
         this.headerIndexMap = new HashMap<>();
         this.roomHeaderIndexMap = new HashMap<>();
         this.izuzetiDani = new ArrayList<>();
+        this.pocetni = new ArrayList<>();
+        this.krajnji = new ArrayList<>();
     }
 
     public List<Term> getTerms() {
@@ -124,5 +128,13 @@ public class Schedule {
     }
     public void setIzuzetiDani(List<LocalDate> izuzetiDani) {
         this.izuzetiDani = izuzetiDani;
+    }
+
+    public List<LocalDate> getPocetni() {
+        return pocetni;
+    }
+
+    public List<LocalDate> getKrajnji() {
+        return krajnji;
     }
 }

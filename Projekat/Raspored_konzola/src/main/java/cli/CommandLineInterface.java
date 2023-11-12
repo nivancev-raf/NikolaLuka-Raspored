@@ -26,6 +26,7 @@ public class CommandLineInterface {
     private RoomFileLoader roomFileLoader;
     private FileExporter fileExporter;
     private FileExporter2 fileExporter2;
+    private String implAnswer;
 
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
@@ -57,7 +58,7 @@ public class CommandLineInterface {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Unesite tip fajla: (JSON ili CSV)");
+        System.out.println("Unesite tip fajla koji ucitavate: (JSON ili CSV)");
         String fileType = scanner.nextLine();
         String filePath = fileTypePath(fileType, scanner);
         if (filePath == null) return;
@@ -85,7 +86,22 @@ public class CommandLineInterface {
             return;
         }
 
-        System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
+        System.out.println();
+        System.out.println("Na koji nacin zelite da cuvate fajl?");
+        System.out.println("1. Raspored se čuva kao kolekcija konkretnih termina u vremenu i prostoru");
+        System.out.println("2. Raspored se čuva na nedeljnom nivou za zadati period");
+        implAnswer = scanner.nextLine();
+        if (implAnswer.equals("1")) {
+            fileExporter = new FileExporter(Schedule.getInstance());
+        } else if (implAnswer.equals("2")) {
+            fileExporter2 = new FileExporter2(Schedule.getInstance());
+        } else {
+            System.out.println("Pogresan unos");
+            return;
+        }
+
+
+        System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy ili Unesite 'kraj' za prekid");
         while (true) {
             String command = scanner.nextLine();
             if (command.equalsIgnoreCase("kraj")) break;
@@ -94,7 +110,7 @@ public class CommandLineInterface {
             else System.out.println("Neuspesno dodat izuzet dan (nije u opsegu ili nije dobar format): " + command);
 
             if (Schedule.getInstance().getIzuzetiDani().isEmpty())
-                System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy");
+                System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy ili Unesite 'kraj' za prekid");
             else System.out.println("Da li zelite da dodate jos datuma? Unesite 'kraj' za prekid");
 
         }
@@ -146,7 +162,7 @@ public class CommandLineInterface {
                 break;
             case "3":
                 // Logika za pretragu termina
-                searchHandler.searchAndPrintTerms();
+                searchHandler.searchAndPrintTerms(implAnswer);
                 break;
             case "4":
                 // Logika za pretragu termina slobodnih za nastavnika
@@ -181,21 +197,21 @@ public class CommandLineInterface {
         }
     }
     private void exportFileCLI() throws FileNotFoundException {
-        System.out.println("U kom obliku zelite da eksportujete fajl: 1)Implementacija1 2)Implementacija2");
+//        System.out.println("U kom obliku zelite da eksportujete fajl: 1)Implementacija1 2)Implementacija2");
 
         Scanner scanner = new Scanner(System.in);
 //        String answer = scanner.nextLine();
-        String answer = "2";
-        if(answer.equalsIgnoreCase("1")){
+//        String answer = "2";
+        if(implAnswer.equalsIgnoreCase("1")){
             System.out.println("Unesite putanju gde hocete da sacuvate file: ");
             String path = scanner.nextLine();
-            fileExporter = new FileExporter(schedule);
+//            fileExporter = new FileExporter(schedule);
             fileExporter.exportFile(path);
-        } else if(answer.equalsIgnoreCase("2")) {
+        } else if(implAnswer.equalsIgnoreCase("2")) {
             System.out.println("Unesite putanju gde hocete da sacuvate file: ");
 //            String path = scanner.nextLine();
             String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\ProjekatGit\\Projekat\\Specifikacija\\src\\main\\resources\\exportedFile.txt";
-            fileExporter2 = new FileExporter2(schedule);
+//            fileExporter2 = new FileExporter2(schedule);
             fileExporter2.exportFile(path);
         }
 

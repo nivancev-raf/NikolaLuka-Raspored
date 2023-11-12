@@ -20,24 +20,48 @@ public class SearchHandler {
         this.searchCriteria = searchCriteria;
     }
 
-    public void searchAndPrintTerms() {
+    public void searchAndPrintTerms(String implAnswer) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Izaberite opciju:");
-        System.out.println("1 - Pretraga po datumu");
-        System.out.println("2 - Pretraga po kriterijumima");
-        System.out.print("Unesite broj opcije: ");
-        String opcija = scanner.nextLine().trim();
+        if (implAnswer.equalsIgnoreCase("1")){
+            System.out.println("Izaberite opciju:");
+            System.out.println("1 - Pretraga po datumu");
+            System.out.println("2 - Pretraga po kriterijumima");
+            System.out.print("Unesite broj opcije: ");
+            String opcija = scanner.nextLine().trim();
 
-        switch (opcija) {
-            case "1":
-                searchByDate(scanner);
-                break;
-            case "2":
-                searchByCriteria(scanner);
-                break;
-            default:
-                System.out.println("Nepostojeća opcija. Pokušajte ponovo.");
-                break;
+            switch (opcija) {
+                case "1":
+                    searchByDate(scanner);
+                    break;
+                case "2":
+                    searchByCriteria(scanner);
+                    break;
+                default:
+                    System.out.println("Nepostojeća opcija. Pokušajte ponovo.");
+                    break;
+            }
+        }else if (implAnswer.equalsIgnoreCase("2")){
+            System.out.println("Izaberite opciju:");
+            System.out.println("1 - Pretraga po jednom datumu");
+            System.out.println("2 - Pretraga po kriterijumima");
+            System.out.println("3 - Pretraga po periodu");
+            System.out.print("Unesite broj opcije: ");
+            String opcija = scanner.nextLine().trim();
+
+            switch (opcija) {
+                case "1":
+                    searchByDate(scanner);
+                    break;
+                case "2":
+                    searchByCriteria(scanner);
+                    break;
+                case "3":
+                    searchByPeriod(scanner);
+                    break;
+                default:
+                    System.out.println("Nepostojeća opcija. Pokušajte ponovo.");
+                    break;
+            }
         }
     }
 
@@ -190,5 +214,46 @@ public class SearchHandler {
             }
         }
     }
+
+
+    public void searchByPeriod(Scanner scanner) {
+        System.out.print("Unesite početni datum perioda za pretragu (dd.MM.yyyy): ");
+        String startDateInput = scanner.nextLine().trim();
+        System.out.print("Unesite krajnji datum perioda za pretragu (dd.MM.yyyy): ");
+        String endDateInput = scanner.nextLine().trim();
+
+        LocalDate startDate;
+        LocalDate endDate;
+        try {
+            startDate = LocalDate.parse(startDateInput, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+            endDate = LocalDate.parse(endDateInput, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        } catch (DateTimeParseException e) {
+            System.out.println("Neispravan format datuma. Pokušajte ponovo.");
+            return;
+        }
+
+        List<Term> results = new ArrayList<>();
+        for (Term term : schedule.getTerms()) {
+
+            LocalDate termStart = term.getPeriod().getStartPeriod();
+            LocalDate termEnd = term.getPeriod().getEndPeriod();
+
+            // Provera da li se periodi preklapaju
+            if (!startDate.isAfter(termEnd) && !endDate.isBefore(termStart)) {
+                results.add(term);
+            }
+        }
+
+        // Ispis rezultata
+        if (results.isEmpty()) {
+            System.out.println("Nema termina u zadatom periodu.");
+        } else {
+            System.out.println("Termini u periodu od " + startDateInput + " do " + endDateInput + ":");
+            for (Term term : results) {
+                System.out.println(term);
+            }
+        }
+    }
+
 }
 

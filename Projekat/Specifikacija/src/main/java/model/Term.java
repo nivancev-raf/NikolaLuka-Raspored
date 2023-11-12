@@ -80,6 +80,14 @@ public class Term implements ITermManager {
         this.period = period;
     }
 
+    public LocalDate getEndPeriod() {
+        return period.getEndPeriod();
+    }
+
+    public LocalDate getStartPeriod() {
+        return period.getStartPeriod();
+    }
+
     @Override
     public String toString() {
         return "Term{" +

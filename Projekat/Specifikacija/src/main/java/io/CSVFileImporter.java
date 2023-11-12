@@ -1,7 +1,6 @@
 package io;
 
 import api.FileImportExport;
-import api.ITermManager;
 import model.*;
 
 import java.io.BufferedReader;
@@ -11,13 +10,14 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CSVFileImporter extends FileImportExport {
-// CSV MANDATORY: Dan, Ucionica, Termin, Period
+    // CSV MANDATORY: Dan, Ucionica, Termin, Period
     private Map<String, Integer> headerIndexMap = Schedule.getInstance().getHeaderIndexMap();
+    List<LocalDate> krajnjiDatumi = Schedule.getInstance().getKrajnji();
+    List<LocalDate> pocetniDatumi = new ArrayList<>();
+    List<LocalDate> poceo = Schedule.getInstance().getPocetni();
 
     @Override
     public void importFile(String path) {
@@ -47,6 +47,9 @@ public class CSVFileImporter extends FileImportExport {
                     LocalDate startPeriod = LocalDate.parse(periodParts[0].trim(), dateFormatter);
                     LocalDate endPeriod = LocalDate.parse(periodParts[1].trim(), dateFormatter);
 
+                    pocetniDatumi.add(startPeriod);
+                    krajnjiDatumi.add(endPeriod);
+
                     Day day = new Day(dayValue);
                     Room room = new Room(roomValue);
                     if (!Schedule.getInstance().getRoomList().contains(roomValue)){
@@ -55,11 +58,11 @@ public class CSVFileImporter extends FileImportExport {
                     Time time = new Time(startTime, endTime);
                     Period period = new Period(startPeriod, endPeriod);
                     Term term = new Term(room, day, time, period);
-                    if(i==0) {
-                        Schedule.getInstance().setPeriodPocetak(periodParts[0]);
-                        Schedule.getInstance().setPeriodKraj(periodParts[1]);
-                        i++;
-                    }
+//                    if(i==0) {
+//                        Schedule.getInstance().setPeriodPocetak(periodParts[0]);
+//                        Schedule.getInstance().setPeriodKraj(periodParts[1]);
+//                        i++;
+//                    }
 
                     Map<String, String> additionalProperties = new HashMap<>();
                     for (Map.Entry<String, Integer> entry : headerIndexMap.entrySet()) {
@@ -71,6 +74,18 @@ public class CSVFileImporter extends FileImportExport {
                     term.setAdditionalProperties(additionalProperties);
                     Schedule.getInstance().getTerms().add(term);
                 }
+                pocetniDatumi.sort(Comparator.naturalOrder());
+                krajnjiDatumi.sort(Comparator.naturalOrder());
+                Schedule.getInstance().setPeriodPocetak(pocetniDatumi.get(0).format(dateFormatter));
+                Schedule.getInstance().setPeriodKraj(krajnjiDatumi.get(krajnjiDatumi.size() - 1).format(dateFormatter));
+                String date = Schedule.getInstance().getPeriodPocetak();
+                LocalDate datum = LocalDate.parse(date,dateFormatter);
+                for(LocalDate pocetak: pocetniDatumi){
+                    if(pocetak.isAfter(datum)){
+                        poceo.add(pocetak);
+                    }
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
