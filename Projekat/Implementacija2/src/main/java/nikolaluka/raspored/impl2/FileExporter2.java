@@ -1,5 +1,9 @@
 package nikolaluka.raspored.impl2;
+import adapter.LocalDateAdapter;
+import adapter.LocalTimeAdapter;
 import api.SpecFileExport;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.Schedule;
 import model.SearchCriteria;
 import model.Term;
@@ -7,6 +11,7 @@ import model.Term;
 import java.io.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -24,7 +29,7 @@ public class FileExporter2 extends SpecFileExport {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Override
-    public void exportFile(String path) {
+    public void exportFileTXT(String path) {
         // Sortiranje izuzetih datuma
 
         List<LocalDate> lista1 = Schedule.getInstance().getKrajnji();
@@ -73,6 +78,50 @@ public class FileExporter2 extends SpecFileExport {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void exportFileCSV(String path) throws FileNotFoundException {
+
+    }
+
+    @Override
+    public void exportFileJSON(String path) throws FileNotFoundException {
+        // Create Gson instance with pretty printing
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
+                .setPrettyPrinting()
+                .create();
+
+        // Retrieve all terms from the schedule
+        List<Term> terms = schedule.getTerms();
+
+        // Convert terms list to JSON
+        String json = gson.toJson(terms);
+
+        // Prepare the file
+        File file = new File(path);
+        try {
+            // Create a new file if it does not exist
+            if (!file.exists()) {
+                boolean fileCreated = file.createNewFile();
+                if (!fileCreated) {
+                    System.err.println("Failed to create new file at the specified path.");
+                    return;
+                }
+            }
+
+            // Write JSON string to file using FileWriter
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(json);
+            }
+        } catch (IOException e) {
+            // Handle exception or rethrow as a custom exception
+            System.err.println("An error occurred while writing JSON to the file: " + e.getMessage());
+            // If you want to rethrow it, you can wrap it into a custom exception and throw
+            // throw new CustomExportException("Error while exporting to JSON", e);
         }
     }
 

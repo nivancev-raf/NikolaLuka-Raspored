@@ -2,6 +2,9 @@ package model;
 
 import api.ITermManager;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -136,6 +139,18 @@ public class Term implements ITermManager {
         Time time = new Time(startTime, endTime);
         Room room = new Room(roomInput);
 
+        for(Room rooms : Schedule.getInstance().getRoomList()){
+            if(rooms.getName().equals(roomInput)){
+                System.out.println("usao sam");
+                break;
+            }
+        }
+
+        if (!Schedule.getInstance().getRoomList().contains(roomInput)){
+            writing_room_data(roomInput);
+            Schedule.getInstance().getRoomList().add(room);
+        }
+
         if (!isTermOccupied(day.getName(), startTime, endTime, room.getName())) {
             Term newTerm = new Term(room, day, time,period);
             if (additionalInputs != null){
@@ -147,9 +162,46 @@ public class Term implements ITermManager {
 
                 newTerm.setAdditionalProperties(additionalProperties);
             }
+            LocalDate startDate = LocalDate.parse(Schedule.getInstance().getPeriodPocetak().trim(), dateFormatter);
+            LocalDate endDate = LocalDate.parse(Schedule.getInstance().getPeriodKraj().trim(), dateFormatter);
+            if(newTerm.getPeriod().getStartPeriod().isBefore(startDate) && !Schedule.getInstance().getIzuzetiDani().contains(newTerm.getPeriod().getStartPeriod())){
+                Schedule.getInstance().setPeriodPocetak(newTerm.getPeriod().getStartPeriod().format(dateFormatter));
+            }
+            if(newTerm.getPeriod().getEndPeriod().isAfter(endDate) && !Schedule.getInstance().getIzuzetiDani().contains(newTerm.getPeriod().getEndPeriod())){
+                Schedule.getInstance().setPeriodKraj(newTerm.getPeriod().getEndPeriod().format(dateFormatter));
+            }
+            Schedule.getInstance().getKrajnji().add(newTerm.getPeriod().getEndPeriod());
+            Schedule.getInstance().getPocetni().add(newTerm.getPeriod().getStartPeriod());
             return newTerm;
         } else {
             return null; // vraca null ako je termin zauzet
+        }
+    }
+
+
+    private void writing_room_data(String room) {
+        try (FileWriter fileWriter = new FileWriter("C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt", true); // Dodajemo true za append
+             BufferedWriter writer = new BufferedWriter(fileWriter)) {
+            Scanner scanner = new Scanner(System.in);
+            int kapacitet = 0;
+            List<String> dodatno = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : Schedule.getInstance().getRoomHeaderIndexMap().entrySet()) {
+                if (entry.getKey().equals("Kapacitet")) {
+                    System.out.println("Unesite kapacitet:");
+                    kapacitet = Integer.parseInt(scanner.nextLine());
+                }
+                if (!entry.getKey().equals("Ucionica") && !entry.getKey().equals("Kapacitet")) {
+                    System.out.println("Da li vasa ucionica ima " + entry.getKey() + " (DA/NE):");
+                    dodatno.add(scanner.nextLine().toUpperCase(Locale.ROOT));
+                }
+            }
+            // Formatiranje dodatnih opcija
+            String dodatnoFormatted = String.join(",", dodatno);
+
+            writer.write(String.format("%s,%d,%s\n", room, kapacitet, dodatnoFormatted));
+             writer.newLine(); // Ovaj red nije potreban jer već dodajemo novi red u formatiranom stringu
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

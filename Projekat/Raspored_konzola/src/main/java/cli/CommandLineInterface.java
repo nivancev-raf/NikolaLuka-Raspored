@@ -147,7 +147,7 @@ public class CommandLineInterface {
         System.out.println("8. Premestanje termina");
         System.out.println("9. Stampanje celog rasporeda");
         System.out.println("10. Stampaj izuzete dane");
-        System.out.println("11. Export fajla");
+        System.out.println("11. Export File");
     }
 
     private void executeCommand(String command) throws FileNotFoundException {
@@ -196,26 +196,66 @@ public class CommandLineInterface {
                 break;
         }
     }
-    private void exportFileCLI() throws FileNotFoundException {
-//        System.out.println("U kom obliku zelite da eksportujete fajl: 1)Implementacija1 2)Implementacija2");
-
+    private void exportFileCLI() {
+        System.out.println("Unesite oblik fajla za export: 1)TXT 2)JSON 3)CSV");
         Scanner scanner = new Scanner(System.in);
-//        String answer = scanner.nextLine();
-//        String answer = "2";
-        if(implAnswer.equalsIgnoreCase("1")){
-            System.out.println("Unesite putanju gde hocete da sacuvate file: ");
-            String path = scanner.nextLine();
-//            fileExporter = new FileExporter(schedule);
-            fileExporter.exportFile(path);
-        } else if(implAnswer.equalsIgnoreCase("2")) {
-            System.out.println("Unesite putanju gde hocete da sacuvate file: ");
-//            String path = scanner.nextLine();
-            String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\ProjekatGit\\Projekat\\Specifikacija\\src\\main\\resources\\exportedFile.txt";
-//            fileExporter2 = new FileExporter2(schedule);
-            fileExporter2.exportFile(path);
-        }
+        String format = scanner.nextLine();
 
+        System.out.println("Unesite putanju gde hocete da sacuvate file: ");
+        // Ovde bi korisnik trebao da unese putanju
+//        String path = scanner.nextLine();
+        String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\exportedFile.json";
+
+        switch (format.toLowerCase()) {
+            case "txt":
+                exportFile(path, "txt");
+                break;
+            case "json":
+                exportFile(path, "json");
+                break;
+            case "csv":
+                exportFile(path, "csv");
+                break;
+            default:
+                System.out.println("Neispravan format. Pokušajte ponovo.");
+                break;
+        }
     }
+
+    private void exportFile(String path, String format) {
+        try {
+            if (implAnswer.equalsIgnoreCase("1")) {
+                switch (format) {
+                    case "txt":
+                        fileExporter.exportFileTXT(path);
+                        break;
+                    case "json":
+                        fileExporter.exportFileJSON(path);
+                        break;
+                    case "csv":
+                        fileExporter.exportFileCSV(path);
+                        break;
+                }
+            } else if (implAnswer.equalsIgnoreCase("2")) {
+                switch (format) {
+                    case "txt":
+                        fileExporter2.exportFileTXT(path);
+                        break;
+                    case "json":
+                        fileExporter2.exportFileJSON(path);
+                        break;
+                    case "csv":
+                        fileExporter2.exportFileCSV(path);
+                        break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("Navedena putanja nije pronađena: " + path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void printSchedule() {
         for (Term term : Schedule.getInstance().getTerms()) {

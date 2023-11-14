@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 
 public abstract class SpecFileExport {
 
-    public abstract void exportFile(String path) throws FileNotFoundException;
+    public abstract void exportFileTXT(String path) throws FileNotFoundException;
+    public abstract void exportFileCSV(String path) throws FileNotFoundException;
+    public abstract void exportFileJSON(String path) throws FileNotFoundException;
 
 
 }
