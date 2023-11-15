@@ -139,18 +139,6 @@ public class Term implements ITermManager {
         Time time = new Time(startTime, endTime);
         Room room = new Room(roomInput);
 
-        for(Room rooms : Schedule.getInstance().getRoomList()){
-            if(rooms.getName().equals(roomInput)){
-                System.out.println("usao sam");
-                break;
-            }
-        }
-
-        if (!Schedule.getInstance().getRoomList().contains(roomInput)){
-            writing_room_data(roomInput);
-            Schedule.getInstance().getRoomList().add(room);
-        }
-
         if (!isTermOccupied(day.getName(), startTime, endTime, room.getName())) {
             Term newTerm = new Term(room, day, time,period);
             if (additionalInputs != null){

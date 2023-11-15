@@ -82,7 +82,7 @@ public class CommandLineInterface {
             roomFileLoader.importFile("/room.txt");
             System.out.println("Uspesno ucitan txt fajl: " + "/room.txt");
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("usao sam ovde");
             return;
         }
 
@@ -197,7 +197,7 @@ public class CommandLineInterface {
         }
     }
     private void exportFileCLI() {
-        System.out.println("Unesite oblik fajla za export: 1)TXT 2)JSON 3)CSV");
+        System.out.println("Unesite oblik fajla za export: 1)TXT 2)JSON 3)CSV ---- UNOS: 1,2 ili 3");
         Scanner scanner = new Scanner(System.in);
         String format = scanner.nextLine();
 
@@ -207,13 +207,13 @@ public class CommandLineInterface {
         String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\exportedFile.json";
 
         switch (format.toLowerCase()) {
-            case "txt":
+            case "1":
                 exportFile(path, "txt");
                 break;
-            case "json":
+            case "2":
                 exportFile(path, "json");
                 break;
-            case "csv":
+            case "3":
                 exportFile(path, "csv");
                 break;
             default:
@@ -221,30 +221,29 @@ public class CommandLineInterface {
                 break;
         }
     }
-
     private void exportFile(String path, String format) {
         try {
             if (implAnswer.equalsIgnoreCase("1")) {
                 switch (format) {
-                    case "txt":
+                    case "1":
                         fileExporter.exportFileTXT(path);
                         break;
-                    case "json":
+                    case "2":
                         fileExporter.exportFileJSON(path);
                         break;
-                    case "csv":
+                    case "3":
                         fileExporter.exportFileCSV(path);
                         break;
                 }
             } else if (implAnswer.equalsIgnoreCase("2")) {
                 switch (format) {
-                    case "txt":
+                    case "1":
                         fileExporter2.exportFileTXT(path);
                         break;
-                    case "json":
+                    case "2":
                         fileExporter2.exportFileJSON(path);
                         break;
-                    case "csv":
+                    case "3":
                         fileExporter2.exportFileCSV(path);
                         break;
                 }

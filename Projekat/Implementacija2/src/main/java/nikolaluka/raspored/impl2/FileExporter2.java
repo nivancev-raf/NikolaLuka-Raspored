@@ -7,7 +7,6 @@ import com.google.gson.GsonBuilder;
 import model.Schedule;
 import model.SearchCriteria;
 import model.Term;
-
 import java.io.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -81,10 +80,53 @@ public class FileExporter2 extends SpecFileExport {
         }
     }
 
-    @Override
-    public void exportFileCSV(String path) throws FileNotFoundException {
+    public void exportFileCSV(String outputPath) {
+        // Formatter for parsing dates
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
+        // Open a file writer
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
+            // Write the CSV headers
+            // Write the CSV headers from the headerIndexMap
+            List<String> headers = new ArrayList<>(Schedule.getInstance().getHeaderIndexMap().keySet());
+            Collections.sort(headers, Comparator.comparingInt(Schedule.getInstance().getHeaderIndexMap()::get)); // Sort headers based on their index
+            String csvHeader = String.join(",", headers) + "\n";
+            writer.write(csvHeader);
+
+            // Iterate over each term and write its data
+            for (Term term : schedule.getTerms()) {
+                String period = term.getPeriodString(); // assuming this method returns a formatted period string
+                DayOfWeek dayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName());
+
+                // Extract the start and end dates of the period
+                String[] periodParts = period.split(" - ");
+                LocalDate startDate = LocalDate.parse(periodParts[0], dateFormatter);
+                LocalDate endDate = LocalDate.parse(periodParts[1], dateFormatter);
+
+                // Iterate over each date within the period
+                for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+                    if (date.getDayOfWeek() == dayOfWeek) {
+                        // Write each term occurrence
+                        writer.write(String.format("%s,%s,%s,%s,%s,%s-%s,%s,%s\n",
+                                term.getAdditionalProperties().get("Predmet"),
+                                term.getAdditionalProperties().get("Tip"),
+                                term.getAdditionalProperties().get("Nastavnik"),
+                                term.getAdditionalProperties().get("Grupe"),
+                                term.getDay().getName(),
+                                term.getTime().getStartTime(),
+                                term.getTime().getEndTime(),
+                                term.getRoom().getName(),
+                                date.format(dateFormatter)));
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception as needed
+        }
     }
+
 
     @Override
     public void exportFileJSON(String path) throws FileNotFoundException {

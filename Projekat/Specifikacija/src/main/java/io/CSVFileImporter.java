@@ -85,9 +85,9 @@ public class CSVFileImporter extends FileImportExport {
                         poceo.add(pocetak);
                     }
                 }
-
             }
         } catch (IOException e) {
+            System.out.println(e);
             e.printStackTrace();
         }
     }

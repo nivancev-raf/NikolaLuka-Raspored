@@ -6,6 +6,51 @@
     "Dan": "UTO",
     "Predmet": "OOP",
     "Nastavnik": "Ivan Ivanovic",
-    "Racunar": "NO"
+    "Racunar": "NE"
+  },
+  {
+    "Ucionica": "Kolarac3",
+    "Period": "20.10.2023-20.12.2023",
+    "Termin": "15:00-18:00",
+    "Dan": "SRE",
+    "Predmet": "Fizika",
+    "Nastavnik": "Marko Markovic",
+    "Racunar": "NE"
+  },
+  {
+    "Ucionica": "Kolarac3",
+    "Period": "20.10.2023-20.12.2023",
+    "Termin": "13:00-14:00",
+    "Dan": "PET",
+    "Predmet": "Fizika",
+    "Nastavnik": "Marko Markovic",
+    "Racunar": "NE"
+  },
+  {
+    "Ucionica": "Kolarac2",
+    "Period": "20.10.2023-20.12.2023",
+    "Termin": "16:00-18:00",
+    "Dan": "SRE",
+    "Predmet": "Fizika",
+    "Nastavnik": "Kevin Punter",
+    "Racunar": "NE"
+  },
+  {
+    "Ucionica": "Kolarac3",
+    "Period": "20.12.2023-21.01.2024",
+    "Termin": "16:00-18:00",
+    "Dan": "CET",
+    "Predmet": "Fizika",
+    "Nastavnik": "Mirko Ivanic",
+    "Racunar": "DA"
+  },
+  {
+    "Ucionica": "Kolarac3",
+    "Period": "20.10.2023-20.12.2024",
+    "Termin": "16:00-18:00",
+    "Dan": "CET",
+    "Predmet": "Fizika",
+    "Nastavnik": "Marko Markovic",
+    "Racunar": "NE"
   }
 ]
