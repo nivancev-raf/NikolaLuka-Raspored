@@ -3,21 +3,25 @@ package io;
 import api.FileImportExport;
 import model.*;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 public class RoomFileLoader extends FileImportExport {
     private Map<String, Integer> roomHeaderIndexMap = Schedule.getInstance().getRoomHeaderIndexMap();
     private List<Room> rooms = Schedule.getInstance().getRoomList();
+    private Set<String> ucionice = Schedule.getInstance().getUcionice();
 
     @Override
     public void importFile(String path) throws FileNotFoundException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path), StandardCharsets.UTF_8)))  {
+        File file = new File(path);
+        if (!file.exists()) {
+            throw new FileNotFoundException("Fajl nije pronađen: " + path);
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8)))  {
 
             String line = br.readLine();
             if (line != null) {
@@ -31,7 +35,7 @@ public class RoomFileLoader extends FileImportExport {
                     String[] values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                     String roomValue = values[roomHeaderIndexMap.get("Ucionica")].trim().replaceAll("^\"|\"$", "");
                     String capacityValue = values[roomHeaderIndexMap.get("Kapacitet")].trim().replaceAll("^\"|\"$", "");
-
+                    ucionice.add(roomValue);
                     for (Term term : Schedule.getInstance().getTerms()) {
                         if (term.getRoom().getName().equals(roomValue)) {
                             rooms.add(term.getRoom());

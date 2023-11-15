@@ -139,6 +139,12 @@ public class Term implements ITermManager {
         Time time = new Time(startTime, endTime);
         Room room = new Room(roomInput);
 
+
+        if(!Schedule.getInstance().getUcionice().contains(roomInput)){
+            System.out.println("Data ucionica ne postoji pogledajte u fajl sa dostupnim ucionicama ili dodajte ucionicu prvo");
+            return null;
+        }
+
         if (!isTermOccupied(day.getName(), startTime, endTime, room.getName())) {
             Term newTerm = new Term(room, day, time,period);
             if (additionalInputs != null){
@@ -161,7 +167,7 @@ public class Term implements ITermManager {
             Schedule.getInstance().getKrajnji().add(newTerm.getPeriod().getEndPeriod());
             Schedule.getInstance().getPocetni().add(newTerm.getPeriod().getStartPeriod());
             return newTerm;
-        } else {
+        }else {
             return null; // vraca null ako je termin zauzet
         }
     }

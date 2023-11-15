@@ -21,6 +21,7 @@ public class Schedule {
     private List<LocalDate> krajnji;
 
     private List<LocalDate> izuzetiDani;
+    private Set<String> ucionice;
 
     private Schedule() {
         initSchedule();
@@ -45,6 +46,7 @@ public class Schedule {
         this.izuzetiDani = new ArrayList<>();
         this.pocetni = new ArrayList<>();
         this.krajnji = new ArrayList<>();
+        this.ucionice = new HashSet<>();
     }
 
     public List<Term> getTerms() {
@@ -136,5 +138,13 @@ public class Schedule {
 
     public List<LocalDate> getKrajnji() {
         return krajnji;
+    }
+
+    public Set<String> getUcionice() {
+        return ucionice;
+    }
+
+    public void setUcionice(Set<String> ucionice) {
+        this.ucionice = ucionice;
     }
 }

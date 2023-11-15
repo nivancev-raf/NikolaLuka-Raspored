@@ -1,6 +1,5 @@
 package cli;
 import api.ITermManager;
-import api.SpecFileExport;
 import handlers.MoveTermHandler;
 import handlers.SearchHandler;
 import handlers.TermHandler;
@@ -10,8 +9,10 @@ import io.RoomFileLoader;
 import nikolaluka.raspored.impl1.FileExporter;
 import model.*;
 import nikolaluka.raspored.impl2.FileExporter2;
-
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class CommandLineInterface {
@@ -28,6 +29,7 @@ public class CommandLineInterface {
     private FileExporter2 fileExporter2;
     private String implAnswer;
 
+    private String room_path;
     public CommandLineInterface() {
         this.schedule = Schedule.getInstance();
         this.termManager = new Term(schedule);
@@ -79,7 +81,8 @@ public class CommandLineInterface {
         // try cactch za txt
         try {
             roomFileLoader = new RoomFileLoader();
-            roomFileLoader.importFile("/room.txt");
+            room_path = "C:\\Users\\teodo\\IdeaProjects\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt";
+            roomFileLoader.importFile("C:\\Users\\teodo\\IdeaProjects\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt");
             System.out.println("Uspesno ucitan txt fajl: " + "/room.txt");
         } catch (Exception e) {
             System.out.println("usao sam ovde");
@@ -148,6 +151,7 @@ public class CommandLineInterface {
         System.out.println("9. Stampanje celog rasporeda");
         System.out.println("10. Stampaj izuzete dane");
         System.out.println("11. Export File");
+        System.out.printf("12. Dodavanje prostorije sa karakteristikama");
     }
 
     private void executeCommand(String command) throws FileNotFoundException {
@@ -191,6 +195,8 @@ public class CommandLineInterface {
             case "11":
                 exportFileCLI();
                 break;
+            case "12":
+                addRoom();
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
                 break;
@@ -204,7 +210,7 @@ public class CommandLineInterface {
         System.out.println("Unesite putanju gde hocete da sacuvate file: ");
         // Ovde bi korisnik trebao da unese putanju
 //        String path = scanner.nextLine();
-        String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\exportedFile.json";
+        String path = "C:\\Users\\teodo\\IdeaProjects\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\export.csv";
 
         switch (format.toLowerCase()) {
             case "1":
@@ -255,8 +261,39 @@ public class CommandLineInterface {
             e.printStackTrace();
         }
     }
-
-
+        private void addRoom() {
+            try (FileWriter fileWriter = new FileWriter(room_path, true); // Dodajemo true za append
+                 BufferedWriter writer = new BufferedWriter(fileWriter)) {
+                Scanner scanner = new Scanner(System.in);
+                int kapacitet = 0;
+                String ucionica = "";
+                List<String> dodatno = new ArrayList<>();
+                Map<String, String> additionalProperties = new HashMap<>();
+                for (Map.Entry<String, Integer> entry : Schedule.getInstance().getRoomHeaderIndexMap().entrySet()) {
+                    if (entry.getKey().equals("Kapacitet")) {
+                        System.out.println("Unesite kapacitet:");
+                        kapacitet = Integer.parseInt(scanner.nextLine());
+                    }
+                    if(entry.getKey().equals("Ucionica")) {
+                        System.out.printf("Unesite naziv ucionice:");
+                        ucionica = scanner.nextLine();
+                    }
+                    if (!entry.getKey().equals("Ucionica") && !entry.getKey().equals("Kapacitet")) {
+                        System.out.println("Da li vasa ucionica ima " + entry.getKey() + " (DA/NE):");
+                        String dodaj = scanner.nextLine();
+                        dodatno.add(dodaj.toUpperCase(Locale.ROOT));
+                        additionalProperties.put(entry.getKey(),dodaj);
+                    }
+                }
+                Schedule.getInstance().getUcionice().add(ucionica);
+                // Formatiranje dodatnih opcija
+                String dodatnoFormatted = String.join(",", dodatno);
+                writer.write(String.format("%s,%d,%s", ucionica, kapacitet, dodatnoFormatted));
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     public void printSchedule() {
         for (Term term : Schedule.getInstance().getTerms()) {
             System.out.println("Day: " + term.getDay().getName());
@@ -270,6 +307,4 @@ public class CommandLineInterface {
             System.out.println("-----");
         }
     }
-
-
 }
