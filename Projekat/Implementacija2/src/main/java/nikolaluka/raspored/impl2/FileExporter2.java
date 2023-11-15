@@ -139,7 +139,6 @@ public class FileExporter2 extends SpecFileExport {
 
         // Retrieve all terms from the schedule
         List<Term> terms = schedule.getTerms();
-
         // Convert terms list to JSON
         String json = gson.toJson(terms);
 

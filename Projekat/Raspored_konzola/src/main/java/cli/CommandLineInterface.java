@@ -225,25 +225,26 @@ public class CommandLineInterface {
         try {
             if (implAnswer.equalsIgnoreCase("1")) {
                 switch (format) {
-                    case "1":
+                    case "txt":
                         fileExporter.exportFileTXT(path);
                         break;
-                    case "2":
+                    case "json":
                         fileExporter.exportFileJSON(path);
                         break;
-                    case "3":
+                    case "csv":
                         fileExporter.exportFileCSV(path);
                         break;
                 }
             } else if (implAnswer.equalsIgnoreCase("2")) {
                 switch (format) {
-                    case "1":
+                    case "txt":
                         fileExporter2.exportFileTXT(path);
                         break;
-                    case "2":
+                    case "json":
+                        System.out.println("usao sam");
                         fileExporter2.exportFileJSON(path);
                         break;
-                    case "3":
+                    case "csv":
                         fileExporter2.exportFileCSV(path);
                         break;
                 }
