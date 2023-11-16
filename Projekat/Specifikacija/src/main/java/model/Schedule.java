@@ -23,6 +23,10 @@ public class Schedule {
     private List<LocalDate> izuzetiDani;
     private Set<String> ucionice;
 
+    private Map<String,Integer> kapaciteti;
+
+    private Map<String,Map<String,String>> dodatno;
+
     private Schedule() {
         initSchedule();
     }
@@ -47,6 +51,24 @@ public class Schedule {
         this.pocetni = new ArrayList<>();
         this.krajnji = new ArrayList<>();
         this.ucionice = new HashSet<>();
+        this.dodatno = new HashMap<>();
+        this.kapaciteti = new HashMap<>();
+    }
+
+    public Map<String, Integer> getKapaciteti() {
+        return kapaciteti;
+    }
+
+    public void setKapaciteti(Map<String, Integer> kapaciteti) {
+        this.kapaciteti = kapaciteti;
+    }
+
+    public Map<String, Map<String, String>> getDodatno() {
+        return dodatno;
+    }
+
+    public void setDodatno(Map<String, Map<String, String>> dodatno) {
+        this.dodatno = dodatno;
     }
 
     public List<Term> getTerms() {

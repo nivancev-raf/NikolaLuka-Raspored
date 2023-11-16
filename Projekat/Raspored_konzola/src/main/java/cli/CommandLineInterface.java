@@ -81,8 +81,8 @@ public class CommandLineInterface {
         // try cactch za txt
         try {
             roomFileLoader = new RoomFileLoader();
-            room_path = "C:\\Users\\teodo\\IdeaProjects\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt";
-            roomFileLoader.importFile("C:\\Users\\teodo\\IdeaProjects\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt");
+            room_path = "D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt";
+            roomFileLoader.importFile("D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt");
             System.out.println("Uspesno ucitan txt fajl: " + "/room.txt");
         } catch (Exception e) {
             System.out.println("usao sam ovde");
@@ -151,7 +151,7 @@ public class CommandLineInterface {
         System.out.println("9. Stampanje celog rasporeda");
         System.out.println("10. Stampaj izuzete dane");
         System.out.println("11. Export File");
-        System.out.printf("12. Dodavanje prostorije sa karakteristikama");
+        System.out.println("12. Dodavanje prostorije sa karakteristikama");
     }
 
     private void executeCommand(String command) throws FileNotFoundException {
@@ -197,6 +197,7 @@ public class CommandLineInterface {
                 break;
             case "12":
                 addRoom();
+                break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
                 break;
@@ -210,7 +211,7 @@ public class CommandLineInterface {
         System.out.println("Unesite putanju gde hocete da sacuvate file: ");
         // Ovde bi korisnik trebao da unese putanju
 //        String path = scanner.nextLine();
-        String path = "C:\\Users\\teodo\\IdeaProjects\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\export.csv";
+        String path = "D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\test.csv";
 
         switch (format.toLowerCase()) {
             case "1":
@@ -275,7 +276,7 @@ public class CommandLineInterface {
                         kapacitet = Integer.parseInt(scanner.nextLine());
                     }
                     if(entry.getKey().equals("Ucionica")) {
-                        System.out.printf("Unesite naziv ucionice:");
+                        System.out.println("Unesite naziv ucionice:");
                         ucionica = scanner.nextLine();
                     }
                     if (!entry.getKey().equals("Ucionica") && !entry.getKey().equals("Kapacitet")) {
@@ -286,6 +287,8 @@ public class CommandLineInterface {
                     }
                 }
                 Schedule.getInstance().getUcionice().add(ucionica);
+                Schedule.getInstance().getDodatno().put(ucionica,additionalProperties);
+                Schedule.getInstance().getKapaciteti().put(ucionica,kapacitet);
                 // Formatiranje dodatnih opcija
                 String dodatnoFormatted = String.join(",", dodatno);
                 writer.write(String.format("%s,%d,%s", ucionica, kapacitet, dodatnoFormatted));

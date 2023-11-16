@@ -15,6 +15,8 @@ public class RoomFileLoader extends FileImportExport {
     private List<Room> rooms = Schedule.getInstance().getRoomList();
     private Set<String> ucionice = Schedule.getInstance().getUcionice();
 
+    private Map<String,Integer> kapacitet = Schedule.getInstance().getKapaciteti();
+    private Map<String,Map<String,String>> dodatno = Schedule.getInstance().getDodatno();
     @Override
     public void importFile(String path) throws FileNotFoundException {
         File file = new File(path);
@@ -39,6 +41,7 @@ public class RoomFileLoader extends FileImportExport {
                     for (Term term : Schedule.getInstance().getTerms()) {
                         if (term.getRoom().getName().equals(roomValue)) {
                             rooms.add(term.getRoom());
+                            kapacitet.put(term.getRoom().getName(),Integer.parseInt(capacityValue));
                             term.getRoom().setCapacity(Integer.parseInt(capacityValue));
                         }
                     }
@@ -54,6 +57,7 @@ public class RoomFileLoader extends FileImportExport {
                     // Ažuriranje dodatnih informacija za svaku učionicu
                     for (Term term : Schedule.getInstance().getTerms()) {
                         if (term.getRoom().getName().equals(roomValue)) {
+                            dodatno.put(term.getRoom().getName(),additionalProperties);
                             term.getRoom().setAdditional(additionalProperties);
                         }
                     }

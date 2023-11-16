@@ -166,36 +166,24 @@ public class Term implements ITermManager {
             }
             Schedule.getInstance().getKrajnji().add(newTerm.getPeriod().getEndPeriod());
             Schedule.getInstance().getPocetni().add(newTerm.getPeriod().getStartPeriod());
+
+            for(Map.Entry<String, Integer> entry : Schedule.getInstance().getKapaciteti().entrySet()){
+                if(entry.getKey().equals(roomInput)){
+                    newTerm.getRoom().setCapacity(entry.getValue());
+                    break;
+                }
+            }
+
+            for(Map.Entry<String, Map<String, String>> entry : Schedule.getInstance().getDodatno().entrySet()){
+                if(entry.getKey().equals(roomInput)){
+                    newTerm.getRoom().setAdditional(entry.getValue());
+                    break;
+                }
+            }
+
             return newTerm;
         }else {
             return null; // vraca null ako je termin zauzet
-        }
-    }
-
-
-    private void writing_room_data(String room) {
-        try (FileWriter fileWriter = new FileWriter("C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt", true); // Dodajemo true za append
-             BufferedWriter writer = new BufferedWriter(fileWriter)) {
-            Scanner scanner = new Scanner(System.in);
-            int kapacitet = 0;
-            List<String> dodatno = new ArrayList<>();
-            for (Map.Entry<String, Integer> entry : Schedule.getInstance().getRoomHeaderIndexMap().entrySet()) {
-                if (entry.getKey().equals("Kapacitet")) {
-                    System.out.println("Unesite kapacitet:");
-                    kapacitet = Integer.parseInt(scanner.nextLine());
-                }
-                if (!entry.getKey().equals("Ucionica") && !entry.getKey().equals("Kapacitet")) {
-                    System.out.println("Da li vasa ucionica ima " + entry.getKey() + " (DA/NE):");
-                    dodatno.add(scanner.nextLine().toUpperCase(Locale.ROOT));
-                }
-            }
-            // Formatiranje dodatnih opcija
-            String dodatnoFormatted = String.join(",", dodatno);
-
-            writer.write(String.format("%s,%d,%s\n", room, kapacitet, dodatnoFormatted));
-             writer.newLine(); // Ovaj red nije potreban jer već dodajemo novi red u formatiranom stringu
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
