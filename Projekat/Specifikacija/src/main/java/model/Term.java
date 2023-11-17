@@ -141,7 +141,6 @@ public class Term implements ITermManager {
 
 
         if(!Schedule.getInstance().getUcionice().contains(roomInput)){
-            System.out.println("Data ucionica ne postoji pogledajte u fajl sa dostupnim ucionicama ili dodajte ucionicu prvo");
             return null;
         }
 
@@ -305,5 +304,30 @@ public class Term implements ITermManager {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void addTermTxt(String room_path, int kapacitet, String ucionica, Map<String, String> additionalProperties) {
+        try (FileWriter fileWriter = new FileWriter(room_path, true); // Dodajemo true za append
+             BufferedWriter writer = new BufferedWriter(fileWriter)) {
+
+
+            List<String> dodatno = new ArrayList<>();
+
+            for (Map.Entry<String, String> entry : additionalProperties.entrySet()) {
+                if (!entry.getKey().equals("Ucionica") && !entry.getKey().equals("Kapacitet")) {
+                    dodatno.add(entry.getValue().toUpperCase(Locale.ROOT));
+                }
+            }
+            Schedule.getInstance().getUcionice().add(ucionica);
+            Schedule.getInstance().getDodatno().put(ucionica,additionalProperties);
+            Schedule.getInstance().getKapaciteti().put(ucionica,kapacitet);
+            // Formatiranje dodatnih opcija
+            String dodatnoFormatted = String.join(",", dodatno);
+            writer.write(String.format("%s,%d,%s", ucionica, kapacitet, dodatnoFormatted));
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

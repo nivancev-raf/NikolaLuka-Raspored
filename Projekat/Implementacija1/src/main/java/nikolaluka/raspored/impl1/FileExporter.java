@@ -1,18 +1,14 @@
 package nikolaluka.raspored.impl1;
 
-import adapter.LocalDateAdapter;
-import adapter.LocalTimeAdapter;
 import api.SpecFileExport;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import model.Schedule;
 import model.SearchCriteria;
 import model.Term;
-
 import java.io.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;

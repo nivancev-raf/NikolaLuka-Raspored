@@ -134,6 +134,7 @@ public class FileExporter2 extends SpecFileExport {
 
         // Retrieve all terms from the schedule
         List<Term> terms = schedule.getTerms();
+        System.out.println("roomList: " + Schedule.getInstance().getRoomList());
         // Convert terms list to JSON
         String json = gson.toJson(terms);
 

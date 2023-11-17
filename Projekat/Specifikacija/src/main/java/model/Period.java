@@ -10,12 +10,11 @@ public class Period {
     private LocalDate endPeriod;
 
 
-    private Map<String, Object> additionalProperties;
+
 
     public Period(LocalDate startPeriod, LocalDate endPeriod) {
         this.startPeriod = startPeriod;
         this.endPeriod = endPeriod;
-        this.additionalProperties = new HashMap<>();
     }
 
     public LocalDate getStartPeriod() {

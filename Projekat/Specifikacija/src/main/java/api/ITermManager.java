@@ -21,4 +21,5 @@ public interface ITermManager {
     void updateScheduleWithNewTerms(Term oldTerm, Term originalTerm, Term newTerm);
     boolean isDateWithinTermPeriod(Term term, LocalDate date);
     boolean parseIzuzetiDani(String datum);
+    void addTermTxt(String room_path, int kapacitet, String ucionica, Map<String, String> additionalProperties);
 }

@@ -11,13 +11,11 @@ public class Time {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    private Map<String, Object> additionalProperties;
+
 
     public Time(LocalTime startTime, LocalTime endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
-        this.additionalProperties = new HashMap<>();
-
     }
 
     public String getFullTime(String startTime, String endTime){
@@ -38,20 +36,6 @@ public class Time {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-
-    public Object getAdditionalProperty(String key) {
-        return additionalProperties.get(key);
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
-    }
-
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
-    }
-
-
 
     public boolean overlaps(Time other) {
         return !(

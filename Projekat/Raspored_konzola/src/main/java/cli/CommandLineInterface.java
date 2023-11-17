@@ -81,8 +81,8 @@ public class CommandLineInterface {
         // try cactch za txt
         try {
             roomFileLoader = new RoomFileLoader();
-            room_path = "D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt";
-            roomFileLoader.importFile("D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt");
+            room_path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt";
+            roomFileLoader.importFile("C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\room.txt");
             System.out.println("Uspesno ucitan txt fajl: " + "/room.txt");
         } catch (Exception e) {
             System.out.println("usao sam ovde");
@@ -196,7 +196,7 @@ public class CommandLineInterface {
                 exportFileCLI();
                 break;
             case "12":
-                addRoom();
+                termHandler.AddTermTxt(room_path);
                 break;
             default:
                 System.out.println("Nepoznata komanda. Molim vas pokušajte ponovo.");
@@ -211,7 +211,7 @@ public class CommandLineInterface {
         System.out.println("Unesite putanju gde hocete da sacuvate file: ");
         // Ovde bi korisnik trebao da unese putanju
 //        String path = scanner.nextLine();
-        String path = "D:\\LukaFakultet\\NikolaLuka-Raspored\\Projekat\\Specifikacija\\src\\main\\resources\\test.csv";
+        String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\export.json";
 
         switch (format.toLowerCase()) {
             case "1":
@@ -262,41 +262,7 @@ public class CommandLineInterface {
             e.printStackTrace();
         }
     }
-        private void addRoom() {
-            try (FileWriter fileWriter = new FileWriter(room_path, true); // Dodajemo true za append
-                 BufferedWriter writer = new BufferedWriter(fileWriter)) {
-                Scanner scanner = new Scanner(System.in);
-                int kapacitet = 0;
-                String ucionica = "";
-                List<String> dodatno = new ArrayList<>();
-                Map<String, String> additionalProperties = new HashMap<>();
-                for (Map.Entry<String, Integer> entry : Schedule.getInstance().getRoomHeaderIndexMap().entrySet()) {
-                    if (entry.getKey().equals("Kapacitet")) {
-                        System.out.println("Unesite kapacitet:");
-                        kapacitet = Integer.parseInt(scanner.nextLine());
-                    }
-                    if(entry.getKey().equals("Ucionica")) {
-                        System.out.println("Unesite naziv ucionice:");
-                        ucionica = scanner.nextLine();
-                    }
-                    if (!entry.getKey().equals("Ucionica") && !entry.getKey().equals("Kapacitet")) {
-                        System.out.println("Da li vasa ucionica ima " + entry.getKey() + " (DA/NE):");
-                        String dodaj = scanner.nextLine();
-                        dodatno.add(dodaj.toUpperCase(Locale.ROOT));
-                        additionalProperties.put(entry.getKey(),dodaj);
-                    }
-                }
-                Schedule.getInstance().getUcionice().add(ucionica);
-                Schedule.getInstance().getDodatno().put(ucionica,additionalProperties);
-                Schedule.getInstance().getKapaciteti().put(ucionica,kapacitet);
-                // Formatiranje dodatnih opcija
-                String dodatnoFormatted = String.join(",", dodatno);
-                writer.write(String.format("%s,%d,%s", ucionica, kapacitet, dodatnoFormatted));
-                writer.newLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
     public void printSchedule() {
         for (Term term : Schedule.getInstance().getTerms()) {
             System.out.println("Day: " + term.getDay().getName());

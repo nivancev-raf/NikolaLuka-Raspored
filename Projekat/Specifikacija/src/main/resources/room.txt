@@ -10,3 +10,5 @@ Raf05 (u),30,DA,NE
 Kolarac3,120,NE,DA
 Raf07 (u),45,DA,NE
 raf88,190,DA,NE
+raf18,30,NE,NE
+raf70,30,DA,NE
