@@ -93,8 +93,6 @@ public class SearchCriteria implements ISearchManager {
 
     @Override
     public String getTermValue(Term term, String header) {
-        // JSON MANDATORY: Dan, Ucionica, Termin, Period
-        // CSV MANDATORY: Dan, Ucionica, Termin, Period
         switch (header.toLowerCase()) {
             case "dan":
                 return term.getDay().getName().toLowerCase();
@@ -156,7 +154,6 @@ public class SearchCriteria implements ISearchManager {
                 // Postavljanje trenutnog vremena na kraj zauzetog termina, ali ne posle kraja radnog vremena
                 current = times[1].isAfter(current) ? times[1] : current;
                 if (current.isAfter(workEnd)) {
-                    // Ako je trenutno vreme posle kraja radnog vremena, prekidamo dalje dodavanje
                     break;
                 }
             }
@@ -262,7 +259,6 @@ public class SearchCriteria implements ISearchManager {
                     }
                 }
                 current = times[1];
-                // Ako trenutno vreme prelazi radno vreme, prekida se dalje dodavanje
                 if (current.isAfter(workEnd)) {
                     break;
                 }

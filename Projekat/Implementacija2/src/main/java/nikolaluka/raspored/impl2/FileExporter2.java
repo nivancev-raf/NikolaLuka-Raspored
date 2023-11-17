@@ -29,12 +29,10 @@ public class FileExporter2 extends SpecFileExport {
 
     @Override
     public void exportFileTXT(String path) {
-        // Sortiranje izuzetih datuma
 
         List<LocalDate> lista1 = Schedule.getInstance().getKrajnji();
         List<LocalDate> lista2 = Schedule.getInstance().getIzuzetiDani();
         List<LocalDate> lista3 = Schedule.getInstance().getPocetni();
-        // Dodajte datume u liste1 i liste2
 
         Set<LocalDate> spojeniSet = new HashSet<>();
         spojeniSet.addAll(lista1);
@@ -81,18 +79,15 @@ public class FileExporter2 extends SpecFileExport {
     }
 
     public void exportFileCSV(String outputPath) {
-        // Formatter for parsing dates
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-        // Open a file writer
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
-            // Write the CSV headers from the headerIndexMap
             List<String> headers = new ArrayList<>(Schedule.getInstance().getHeaderIndexMap().keySet());
             Collections.sort(headers, Comparator.comparingInt(Schedule.getInstance().getHeaderIndexMap()::get));
             String csvHeader = String.join(",", headers) + "\n";
             writer.write(csvHeader);
 
-            // Iterate over each term and write its data
+
             for (Term term : Schedule.getInstance().getTerms()) {
                 List<String> termDetails = new ArrayList<>();
                 for (String header : headers) {
@@ -120,28 +115,21 @@ public class FileExporter2 extends SpecFileExport {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the exception as needed
         }
     }
     @Override
     public void exportFileJSON(String path) throws FileNotFoundException {
-        // Create Gson instance with pretty printing
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
                 .setPrettyPrinting()
                 .create();
 
-        // Retrieve all terms from the schedule
         List<Term> terms = schedule.getTerms();
-        System.out.println("roomList: " + Schedule.getInstance().getRoomList());
-        // Convert terms list to JSON
         String json = gson.toJson(terms);
 
-        // Prepare the file
         File file = new File(path);
         try {
-            // Create a new file if it does not exist
             if (!file.exists()) {
                 boolean fileCreated = file.createNewFile();
                 if (!fileCreated) {
@@ -150,15 +138,11 @@ public class FileExporter2 extends SpecFileExport {
                 }
             }
 
-            // Write JSON string to file using FileWriter
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write(json);
             }
         } catch (IOException e) {
-            // Handle exception or rethrow as a custom exception
             System.err.println("An error occurred while writing JSON to the file: " + e.getMessage());
-            // If you want to rethrow it, you can wrap it into a custom exception and throw
-            // throw new CustomExportException("Error while exporting to JSON", e);
         }
     }
 
@@ -176,12 +160,10 @@ public class FileExporter2 extends SpecFileExport {
     private boolean termFallsInPeriod(Term term, LocalDate start, LocalDate end) {
         LocalDate termStartDate = term.getStartPeriod();
         LocalDate termEndDate = term.getEndPeriod();
-        DayOfWeek termDayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName()); // Pretpostavljam da imate metodu getDayOfWeek()
+        DayOfWeek termDayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName());
 
-        // Provera da li je termin unutar perioda
         boolean isInPeriod = !termStartDate.isAfter(end) && !termEndDate.isBefore(start);
 
-        // Provera da li se dan termina nalazi unutar perioda
         boolean isDayInPeriod = false;
         for (LocalDate date = start; date.isBefore(end.plusDays(1)); date = date.plusDays(1)) {
             if (date.getDayOfWeek() == termDayOfWeek) {

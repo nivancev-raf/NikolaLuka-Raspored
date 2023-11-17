@@ -94,13 +94,10 @@ public class FileExporter extends SpecFileExport {
     public void exportFileJSON(String path) throws FileNotFoundException {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-        // Retrieve all terms from the schedule
         List<Term> terms = schedule.getTerms();
 
-        // Create a list to hold the transformed terms for JSON output
         List<Map<String, Object>> jsonTerms = new ArrayList<>();
 
-        // Transform each Term into a Map that will be converted into JSON
         for (Term term : terms) {
             Map<String, Object> jsonTerm = new HashMap<>();
             DayOfWeek dayOfWeek = searchCriteria.reverseParseDay(term.getDay().getName());
@@ -125,18 +122,14 @@ public class FileExporter extends SpecFileExport {
             jsonTerms.add(jsonTerm);
         }
 
-        // Create Gson instance with pretty printing
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(jsonTerms);
 
-        // Write JSON string to file
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
             writer.write(json);
         } catch (IOException e) {
-            // Handle exception or rethrow as a custom exception
             System.err.println("An error occurred while writing JSON to the file: " + e.getMessage());
-            // If you want to rethrow it, you can wrap it into a custom exception and throw
-            // throw new CustomExportException("Error while exporting to JSON", e);
         }
     }
 

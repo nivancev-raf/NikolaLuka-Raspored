@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class CSVFileImporter extends FileImportExport {
-    // CSV MANDATORY: Dan, Ucionica, Termin, Period
+
     private Map<String, Integer> headerIndexMap = Schedule.getInstance().getHeaderIndexMap();
     List<LocalDate> krajnjiDatumi = Schedule.getInstance().getKrajnji();
     List<LocalDate> pocetniDatumi = new ArrayList<>();
@@ -58,11 +58,6 @@ public class CSVFileImporter extends FileImportExport {
                     Time time = new Time(startTime, endTime);
                     Period period = new Period(startPeriod, endPeriod);
                     Term term = new Term(room, day, time, period);
-//                    if(i==0) {
-//                        Schedule.getInstance().setPeriodPocetak(periodParts[0]);
-//                        Schedule.getInstance().setPeriodKraj(periodParts[1]);
-//                        i++;
-//                    }
 
                     Map<String, String> additionalProperties = new HashMap<>();
                     for (Map.Entry<String, Integer> entry : headerIndexMap.entrySet()) {

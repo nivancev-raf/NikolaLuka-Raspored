@@ -104,7 +104,7 @@ public class SearchHandler {
     private void searchByCriteria(Scanner scanner) {
         Map<String, String> criteria = new HashMap<>();
         Set<String> originalSet = new HashSet<>(schedule.getHeaderIndexMap().keySet());
-        Set<String> set = new HashSet<>(originalSet); // Kopirajte originalni skup
+        Set<String> set = new HashSet<>(originalSet);
 
         while (true) {
             System.out.println("Dostupni headeri za pretragu: " + String.join(", ", set));
