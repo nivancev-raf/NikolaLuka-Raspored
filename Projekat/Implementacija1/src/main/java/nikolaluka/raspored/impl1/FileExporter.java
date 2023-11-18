@@ -1,5 +1,6 @@
 package nikolaluka.raspored.impl1;
 
+import api.Manager;
 import api.SpecFileExport;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,6 +18,9 @@ import java.util.Map;
 
 public class FileExporter extends SpecFileExport {
 
+    static{
+        Manager.setObj(new FileExporter(Schedule.getInstance()));
+    }
     private SearchCriteria searchCriteria;
     private Schedule schedule;
 

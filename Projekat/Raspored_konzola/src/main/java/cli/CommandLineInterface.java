@@ -1,18 +1,15 @@
 package cli;
 import api.ITermManager;
+import api.Manager;
+import api.SpecFileExport;
 import handlers.MoveTermHandler;
 import handlers.SearchHandler;
 import handlers.TermHandler;
 import io.CSVFileImporter;
 import io.JsonFileImporter;
 import io.RoomFileLoader;
-import nikolaluka.raspored.impl1.FileExporter;
 import model.*;
-import nikolaluka.raspored.impl2.FileExporter2;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 public class CommandLineInterface {
@@ -25,8 +22,7 @@ public class CommandLineInterface {
     private JsonFileImporter jsonFileImporter;
     private CSVFileImporter csvFileImporter;
     private RoomFileLoader roomFileLoader;
-    private FileExporter fileExporter;
-    private FileExporter2 fileExporter2;
+    private SpecFileExport fileExporter;
     private String implAnswer;
 
     private String room_path;
@@ -95,13 +91,25 @@ public class CommandLineInterface {
         System.out.println("2. Raspored se čuva na nedeljnom nivou za zadati period");
         implAnswer = scanner.nextLine();
         if (implAnswer.equals("1")) {
-            fileExporter = new FileExporter(Schedule.getInstance());
+//            fileExporter = new FileExporter(Schedule.getInstance());
+            try {
+                Class.forName("nikolaluka.raspored.impl1.FileExporter");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         } else if (implAnswer.equals("2")) {
-            fileExporter2 = new FileExporter2(Schedule.getInstance());
+            try {
+                Class.forName("nikolaluka.raspored.impl2.FileExporter2");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             System.out.println("Pogresan unos");
             return;
         }
+
+        fileExporter = Manager.getSpecFileExport();
+
 
 
         System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy ili Unesite 'kraj' za prekid");
@@ -211,7 +219,7 @@ public class CommandLineInterface {
         System.out.println("Unesite putanju gde hocete da sacuvate file: ");
         // Ovde bi korisnik trebao da unese putanju
 //        String path = scanner.nextLine();
-        String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\export.json";
+        String path = "C:\\Users\\User\\Desktop\\Softverske komponente\\clonedProject\\Projekat\\Specifikacija\\src\\main\\resources\\export.csv";
 
         switch (format.toLowerCase()) {
             case "1":
@@ -245,14 +253,14 @@ public class CommandLineInterface {
             } else if (implAnswer.equalsIgnoreCase("2")) {
                 switch (format) {
                     case "txt":
-                        fileExporter2.exportFileTXT(path);
+                        fileExporter.exportFileTXT(path);
                         break;
                     case "json":
                         System.out.println("usao sam");
-                        fileExporter2.exportFileJSON(path);
+                        fileExporter.exportFileJSON(path);
                         break;
                     case "csv":
-                        fileExporter2.exportFileCSV(path);
+                        fileExporter.exportFileCSV(path);
                         break;
                 }
             }

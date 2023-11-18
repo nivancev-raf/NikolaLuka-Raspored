@@ -10,6 +10,15 @@ import java.util.Map;
 
 public interface ITermManager {
 
+    /**
+     *
+     * @param dayInput - dan1
+     * @param timeInput - time 1
+     * @param roomInput - room 1
+     * @param additionalInputs - add 1
+     * @param period - period 1
+     * @return
+     */
     Term addTerm(String dayInput, String timeInput, String roomInput, Map<String, String> additionalInputs,String period);
     void deleteTerm(String teacherName, String roomName, String time, String day);
     Map<String, String> getAdditionalProperties();

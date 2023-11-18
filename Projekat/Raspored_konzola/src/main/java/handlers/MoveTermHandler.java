@@ -50,9 +50,9 @@ public class MoveTermHandler {
         //        //String roomName = scanner.nextLine();
         //        System.out.println("Unesite vreme (HH:mm-HH:mm):");
         //        //String timeRange = scanner.nextLine();
-        String teacherName = "Brnabic Mateja";
-        String roomName = "Rg07 (u)";
-        String timeRange = "13:15-15:00";
+        String teacherName = "Kevin Punter";
+        String roomName = "Kolarac2";
+        String timeRange = "16:00-18:00";
 
         return termManager.findTermToModify(teacherName, roomName, timeRange);
     }

@@ -1,3 +1,5 @@
+package main;
+
 import cli.CommandLineInterface;
 
 public class Main {
