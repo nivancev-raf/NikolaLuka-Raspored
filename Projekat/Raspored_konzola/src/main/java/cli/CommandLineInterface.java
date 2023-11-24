@@ -118,7 +118,7 @@ public class CommandLineInterface {
             if (command.equalsIgnoreCase("kraj")) break;
 
             if (termManager.parseIzuzetiDani(command)) System.out.println("Uspesno dodat izuzet dan: " + command);
-            else System.out.println("Neuspesno dodat izuzet dan (nije u opsegu ili nije dobar format): " + command);
+            else System.out.println("Neuspesno dodat izuzet dan (nije u opsegu ili nije dobar format): " + command);          
 
             if (Schedule.getInstance().getIzuzetiDani().isEmpty())
                 System.out.println("Unesite izuzete dane u obliku dd.mm.yyyy ili Unesite 'kraj' za prekid");

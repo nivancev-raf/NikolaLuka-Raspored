@@ -1,5 +1,5 @@
 handlers\SearchHandler.class
-Main.class
 handlers\MoveTermHandler.class
+main\Main.class
 cli\CommandLineInterface.class
 handlers\TermHandler.class
